@@ -20,7 +20,6 @@ func _ready() -> void:
 	rope = Rope.new($RopeStartPiece)
 	add_child(rope)
 	rope.create_rope($RopeEndPiece) # rope_end_piece.global_position)
-	add_label($RopeStartPiece.global_position, "Fixed on both ends")
 
 	# Test fixed on the front and floating on the end
 	rope = Rope.new($RopeStartPiece2)
@@ -63,16 +62,3 @@ func _process(delta: float) -> void:
 	if Input.is_action_pressed("ui_right") and grow_rope and rope_drawer:
 		rope_drawer.queue_free()
 		rope_drawer = null
-
-# XXX NEXT:
-#   Custom drawing of a line always from rope_start
-#   Add a shader to the line with a glow on it
-#   Drawing while spooling
-#   Creating size '10' doesn't produce evenly separated hashes; why?
-#   Move out of test_rope and into vfx/rope
-#   Extras:
-#   - Try moving the anchors around and see what happens.
-#   - Parameterize whether gravity effects it
-#   - Set up some wind drama
-#   - Click on a peg to have the rope wind itself around the peg, consuming distance.
-#      - That will be easier than trying to drag
