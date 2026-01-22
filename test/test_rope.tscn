@@ -1,0 +1,261 @@
+[gd_scene load_steps=15 format=3 uid="uid://cul5t6avihigd"]
+
+[ext_resource type="Script" uid="uid://cu2vi5tjeki58" path="res://test/test_rope.gd" id="1_owoih"]
+[ext_resource type="PackedScene" uid="uid://bhof88x0fym2i" path="res://rope/rope_end_piece.tscn" id="2_8rffi"]
+[ext_resource type="PackedScene" uid="uid://b11br86kuy6ke" path="res://rope/rope_piece.tscn" id="3_mp3d7"]
+[ext_resource type="Script" uid="uid://eq3krsynavvh" path="res://rope/rope_piece.gd" id="4_7wuqp"]
+[ext_resource type="PackedScene" uid="uid://bf5jufm3igcse" path="res://rope/wind_generator.tscn" id="4_x7q8p"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7wuqp"]
+size = Vector2(244, 1314.0417)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_vfguq"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_w65ld"]
+radius = 1.0
+height = 50.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_7wuqp"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_52fop"]
+radius = 1.0
+height = 50.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_07vpl"]
+radius = 1.0
+height = 50.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_u6fra"]
+radius = 1.0
+height = 50.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_x7q8p"]
+size = Vector2(244, 650)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_x7q8p"]
+radius = 50.0
+
+[node name="TestRope" type="Node2D"]
+script = ExtResource("1_owoih")
+
+[node name="Fixed on Both Ends" type="Label" parent="."]
+offset_left = 181.0
+offset_top = 61.0
+offset_right = 326.0
+offset_bottom = 84.0
+text = "fixed on both ends"
+
+[node name="RopeStartPiece" parent="." instance=ExtResource("2_8rffi")]
+position = Vector2(314, 98)
+gravity_scale = 0.0
+freeze = true
+
+[node name="RopeEndPiece" parent="." instance=ExtResource("2_8rffi")]
+position = Vector2(1618, 108)
+gravity_scale = 0.1
+freeze = true
+
+[node name="Fixed and Floating" type="Label" parent="."]
+offset_left = 244.0
+offset_top = 299.0
+offset_right = 389.0
+offset_bottom = 322.0
+text = "fixed on the front and floating on the end"
+
+[node name="RopeStartPiece2" parent="." instance=ExtResource("3_mp3d7")]
+position = Vector2(318, 352)
+freeze = true
+
+[node name="RopeEndPiece2" parent="." instance=ExtResource("3_mp3d7")]
+position = Vector2(1621, 377)
+freeze = true
+
+[node name="Specific length" type="Label" parent="."]
+offset_left = 1525.0
+offset_top = 558.0
+offset_right = 1845.0
+offset_bottom = 581.0
+text = "creating a specific length"
+
+[node name="RopeStartPiece3" parent="." instance=ExtResource("2_8rffi")]
+position = Vector2(1630, 609)
+gravity_scale = 0.0
+freeze = true
+
+[node name="Growing" type="Label" parent="."]
+offset_left = 537.0
+offset_top = 713.0
+offset_right = 857.0
+offset_bottom = 736.0
+text = "growing (press down)
+draw line (press left or right)"
+
+[node name="RopeStartPiece4" parent="." instance=ExtResource("2_8rffi")]
+position = Vector2(602, 770)
+gravity_scale = 0.0
+freeze = true
+
+[node name="RopeEndPiece4" parent="." instance=ExtResource("2_8rffi")]
+position = Vector2(1623, 795)
+gravity_scale = 0.1
+freeze = true
+
+[node name="WindGenerator2" parent="." instance=ExtResource("4_x7q8p")]
+position = Vector2(580, 775)
+rotation = 1.5730299
+speed = Vector2(2, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WindGenerator2"]
+position = Vector2(12.000244, -666.0203)
+shape = SubResource("RectangleShape2D_7wuqp")
+
+[node name="Manually created" type="Label" parent="."]
+offset_left = 271.0
+offset_top = 459.0
+offset_right = 591.0
+offset_bottom = 482.0
+text = "manual"
+
+[node name="Node2D" type="Node2D" parent="."]
+position = Vector2(274, 501)
+
+[node name="ExpansionGroveJoint2D" type="GrooveJoint2D" parent="Node2D"]
+position = Vector2(30, 6)
+node_a = NodePath("../RopeStartPiece5")
+node_b = NodePath("../GroveStartPiece")
+initial_offset = 1.0
+
+[node name="GroveStartPiece" type="RigidBody2D" parent="Node2D"]
+position = Vector2(30, 6)
+collision_mask = 16
+script = ExtResource("4_7wuqp")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Node2D/GroveStartPiece"]
+shape = SubResource("CircleShape2D_vfguq")
+
+[node name="PinJoint2D" type="PinJoint2D" parent="Node2D/GroveStartPiece"]
+node_a = NodePath("..")
+node_b = NodePath("../../GroveRopePiece")
+bias = 0.9
+softness = 0.2
+
+[node name="GroveRopePiece" parent="Node2D" instance=ExtResource("3_mp3d7")]
+position = Vector2(30, 6)
+
+[node name="CollisionShape2D" parent="Node2D/GroveRopePiece" index="0"]
+position = Vector2(0, 25)
+shape = SubResource("CapsuleShape2D_w65ld")
+
+[node name="PinJoint2D" parent="Node2D/GroveRopePiece" index="1"]
+position = Vector2(0, 50)
+node_a = NodePath("..")
+node_b = NodePath("../../RopePiece0")
+
+[node name="RopeStartPiece5" parent="Node2D" instance=ExtResource("2_8rffi")]
+position = Vector2(30, 56)
+gravity_scale = 0.0
+freeze = true
+
+[node name="CollisionShape2D" parent="Node2D/RopeStartPiece5" index="0"]
+shape = SubResource("CircleShape2D_7wuqp")
+
+[node name="RopePiece0" parent="Node2D" instance=ExtResource("3_mp3d7")]
+position = Vector2(30, 56)
+
+[node name="CollisionShape2D" parent="Node2D/RopePiece0" index="0"]
+position = Vector2(0, 25)
+shape = SubResource("CapsuleShape2D_w65ld")
+
+[node name="PinJoint2D" parent="Node2D/RopePiece0" index="1"]
+position = Vector2(0, 50)
+node_a = NodePath("..")
+node_b = NodePath("../../RopePiece1")
+
+[node name="RopePiece1" parent="Node2D" instance=ExtResource("3_mp3d7")]
+position = Vector2(30, 107)
+
+[node name="CollisionShape2D" parent="Node2D/RopePiece1" index="0"]
+position = Vector2(0, 25)
+shape = SubResource("CapsuleShape2D_w65ld")
+
+[node name="PinJoint2D" parent="Node2D/RopePiece1" index="1"]
+position = Vector2(0, 50)
+node_a = NodePath("..")
+node_b = NodePath("../../RopePiece2")
+
+[node name="RopePiece2" parent="Node2D" instance=ExtResource("3_mp3d7")]
+position = Vector2(30, 157)
+
+[node name="CollisionShape2D" parent="Node2D/RopePiece2" index="0"]
+position = Vector2(0, 25)
+shape = SubResource("CapsuleShape2D_52fop")
+
+[node name="PinJoint2D" parent="Node2D/RopePiece2" index="1"]
+position = Vector2(0, 50)
+node_a = NodePath("..")
+node_b = NodePath("../../RopePiece3")
+
+[node name="RopePiece3" parent="Node2D" instance=ExtResource("3_mp3d7")]
+position = Vector2(30, 207)
+
+[node name="CollisionShape2D" parent="Node2D/RopePiece3" index="0"]
+position = Vector2(0, 25)
+shape = SubResource("CapsuleShape2D_07vpl")
+
+[node name="PinJoint2D" parent="Node2D/RopePiece3" index="1"]
+position = Vector2(0, 50)
+node_a = NodePath("..")
+node_b = NodePath("../../RopePiece4")
+
+[node name="RopePiece4" parent="Node2D" instance=ExtResource("3_mp3d7")]
+position = Vector2(30, 260)
+
+[node name="CollisionShape2D" parent="Node2D/RopePiece4" index="0"]
+position = Vector2(0, 25)
+shape = SubResource("CapsuleShape2D_u6fra")
+
+[node name="PinJoint2D" parent="Node2D/RopePiece4" index="1"]
+position = Vector2(0, 50)
+node_a = NodePath("..")
+
+[node name="Wind Example" type="Label" parent="."]
+offset_left = 511.0
+offset_top = 933.0
+offset_right = 831.0
+offset_bottom = 956.0
+text = "wind"
+
+[node name="RopeStartPiece5" parent="." instance=ExtResource("2_8rffi")]
+position = Vector2(666, 1079)
+gravity_scale = 0.0
+freeze = true
+
+[node name="RopeEndPiece5" parent="." instance=ExtResource("2_8rffi")]
+position = Vector2(988, 1189)
+gravity_scale = 0.0
+freeze = true
+
+[node name="WindGenerator" parent="." instance=ExtResource("4_x7q8p")]
+position = Vector2(571, 1082)
+rotation = 1.5730299
+speed = Vector2(2, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WindGenerator"]
+position = Vector2(12, -334)
+shape = SubResource("RectangleShape2D_x7q8p")
+
+[node name="Mouse" type="StaticBody2D" parent="."]
+unique_name_in_owner = true
+collision_layer = 16
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Mouse"]
+shape = SubResource("CircleShape2D_x7q8p")
+
+[editable path="Node2D/GroveRopePiece"]
+[editable path="Node2D/RopeStartPiece5"]
+[editable path="Node2D/RopePiece0"]
+[editable path="Node2D/RopePiece1"]
+[editable path="Node2D/RopePiece2"]
+[editable path="Node2D/RopePiece3"]
+[editable path="Node2D/RopePiece4"]

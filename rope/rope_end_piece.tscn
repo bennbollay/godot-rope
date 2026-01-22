@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://bhof88x0fym2i"]
+
+[ext_resource type="Script" uid="uid://eq3krsynavvh" path="res://rope/rope_piece.gd" id="1_0brly"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_vfguq"]
+
+[node name="RopeEndPiece" type="RigidBody2D"]
+collision_mask = 16
+script = ExtResource("1_0brly")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_vfguq")
+
+[node name="PinJoint2D" type="PinJoint2D" parent="."]
