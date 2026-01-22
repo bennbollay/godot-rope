@@ -4,7 +4,7 @@ This project creates a Rope class a variety of different ways to support physics
 
 # Example
 
-https://github.com/user-attachments/assets/1fd01124-c2d5-42f2-8374-ebd364871aac
+![rope_demo_video](https://github.com/user-attachments/assets/6ec2ab26-b500-47e9-a682-a7b096e3d919)
 
 # Usage
 
