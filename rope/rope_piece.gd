@@ -14,6 +14,7 @@ const LOCATION_TOLERANCE := 4.0
 @onready var joint: PinJoint2D = $PinJoint2D
 
 var next_piece: RopePiece
+var follow_mouse: bool = false
 
 signal on_relocation_done()
 
@@ -29,7 +30,7 @@ func relocate_to(length: float, angle: float, target_anchor: RopePiece, force: f
 	groove.node_b = get_path()
 
 	location_target = target_anchor.global_position
-	
+
 	if push_rope:
 		add_constant_force((location_target - global_position) * force)
 	await on_relocation_done
@@ -48,7 +49,7 @@ func update_relocation() -> bool:
 
 
 func get_mouse_vector() -> Vector2:
-	if not Input.is_action_pressed("ui_up"):
+	if not follow_mouse:
 		return Vector2.ZERO
 
 	return (get_global_mouse_position() - position).normalized()

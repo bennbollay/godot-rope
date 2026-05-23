@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://cul5t6avihigd"]
+[gd_scene format=3 uid="uid://cul5t6avihigd"]
 
 [ext_resource type="Script" uid="uid://cu2vi5tjeki58" path="res://test/test_rope.gd" id="1_owoih"]
 [ext_resource type="PackedScene" uid="uid://bhof88x0fym2i" path="res://rope/rope_end_piece.tscn" id="2_8rffi"]
@@ -82,12 +82,12 @@ position = Vector2(1630, 609)
 gravity_scale = 0.0
 freeze = true
 
-[node name="Growing" type="Label" parent="."]
+[node name="Spooling" type="Label" parent="."]
 offset_left = 537.0
 offset_top = 713.0
 offset_right = 857.0
 offset_bottom = 736.0
-text = "growing (press down)
+text = "spooling (press down)
 draw line (press left or right)"
 
 [node name="RopeStartPiece4" parent="." instance=ExtResource("2_8rffi")]
@@ -97,6 +97,23 @@ freeze = true
 
 [node name="RopeEndPiece4" parent="." instance=ExtResource("2_8rffi")]
 position = Vector2(1623, 795)
+gravity_scale = 0.1
+freeze = true
+
+[node name="Extending" type="Label" parent="."]
+offset_left = 567.0
+offset_top = 913.0
+offset_right = 887.0
+offset_bottom = 962.0
+text = "extend  (press enter)"
+
+[node name="RopeStartPiece6" parent="." instance=ExtResource("2_8rffi")]
+position = Vector2(630, 943)
+gravity_scale = 0.0
+freeze = true
+
+[node name="RopeEndPiece6" parent="." instance=ExtResource("2_8rffi")]
+position = Vector2(1651, 968)
 gravity_scale = 0.1
 freeze = true
 

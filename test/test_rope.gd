@@ -4,13 +4,7 @@ extends Node2D
 @onready var rope_end_piece := $RopeEndPiece
 
 var grow_rope: Rope
-
-
-func add_label(pos: Vector2, text: String):
-	var l := RichTextLabel.new()
-	l.global_position = pos
-	l.text = text
-	add_child(l)
+var extend_rope: Rope
 
 
 func _ready() -> void:
@@ -43,6 +37,11 @@ func _ready() -> void:
 	rope.create_rope($RopeEndPiece5.global_position)
 	rope.spool(5)
 
+	# Test extending
+	extend_rope = Rope.new($RopeStartPiece6)
+	add_child(extend_rope)
+	extend_rope.create_rope($RopeEndPiece6.global_position, 20)
+
 
 var gate: float = 0.0
 var rope_drawer: RopeDrawSimpleLine
@@ -53,7 +52,7 @@ func _process(delta: float) -> void:
 	if gate > 0:
 		gate -= delta
 	if Input.is_action_pressed("ui_down") and gate <= 0:
-		gate = 2.0
+		gate = 0.2
 		print("Growing rope")
 		grow_rope.spool(5)
 	if Input.is_action_pressed("ui_left") and grow_rope and not rope_drawer:
@@ -62,3 +61,6 @@ func _process(delta: float) -> void:
 	if Input.is_action_pressed("ui_right") and grow_rope and rope_drawer:
 		rope_drawer.queue_free()
 		rope_drawer = null
+	if Input.is_action_pressed("ui_accept") and extend_rope and gate <= 0:
+		gate = 0.2
+		extend_rope.extend($RopeEndPiece6.global_position, 5)

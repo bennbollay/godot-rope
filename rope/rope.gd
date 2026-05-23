@@ -10,9 +10,15 @@ const LOCATION_TOLERANCE := 4.0
 
 var piece_length: float
 var rope_start: RopePiece
+var rope_last_piece: RopePiece
+var owned_rope_end: bool = false
+
 var close_tolerance: float
 
 var pending_spool_pieces: int = 0
+
+var piece_default_gravity_scale: float = 0.0
+var endpoint_default_gravity_scale: float = 0.0
 
 
 func get_joint(n: Node2D) -> PinJoint2D:
@@ -28,6 +34,8 @@ func get_joint_a(j: PinJoint2D) -> PhysicsBody2D:
 
 
 func get_joint_b(j: PinJoint2D) -> PhysicsBody2D:
+	if j.node_b.is_empty():
+		return null
 	return j.get_node(j.node_b)
 
 
@@ -45,56 +53,79 @@ func get_length(piece: RigidBody2D) -> float:
 	return (get_shape(piece).shape as CapsuleShape2D).height
 
 
-func _init(start: RopePiece, length: float = DEFAULT_PIECE_LENGTH, close_tol: float = LOCATION_TOLERANCE) -> void:
-	piece_length = length
+func _init(
+		start: RopePiece,
+		segment_length: float = DEFAULT_PIECE_LENGTH,
+		piece_default_gravity: float = 0.0,
+		end_default_gravity: float = 0.0,
+		close_tol: float = LOCATION_TOLERANCE,
+) -> void:
+	piece_length = segment_length
 	rope_start = start
 	close_tolerance = close_tol
+	piece_default_gravity_scale = piece_default_gravity
+	endpoint_default_gravity_scale = end_default_gravity
 
 
-func create_rope(end_or_vec2: Variant, max_segments: int = -1):
+func create_rope(end_or_vec2: Variant, max_segments: int = -1, start_piece: RopePiece = rope_start) -> RopePiece:
 	var end_pos: Vector2
+
+	if end_or_vec2 is Vector2i:
+		end_or_vec2 = Vector2(end_or_vec2.x, end_or_vec2.y)
 
 	if end_or_vec2 is Vector2:
 		end_pos = end_or_vec2
 	else:
 		end_pos = get_joint(end_or_vec2).global_position
 
-	var start_pos: Vector2 = get_joint(rope_start).global_position
+	var start_pos: Vector2 = get_joint(start_piece).global_position
 	var distance := start_pos.distance_to(end_pos)
 	var num_segments: int = round(distance / piece_length)
-	var spawn_angle := start_pos.angle_to_point(end_pos) - PI / 2
+	var actual_angle = start_pos.angle_to_point(end_pos)
+	var spawn_angle: float = actual_angle - PI / 2
 	var floating_end: bool = false
-	
+
 	if max_segments != -1 and num_segments > max_segments:
 		floating_end = true
 		num_segments = max_segments
-		
+
 	var shape: CapsuleShape2D = CapsuleShape2D.new()
 	shape.height = piece_length
 	shape.radius = 1.0
 
-	var last_piece := create_rope_segments(num_segments, shape, spawn_angle, end_pos)
+	rope_last_piece = _create_rope_segments(start_piece, num_segments, shape, spawn_angle, end_pos)
 
-	var rope_end_piece: RopePiece
+	var rope_end: RopePiece
 
 	if end_or_vec2 is Vector2 or floating_end:
-		rope_end_piece = RopeEndPieceScene.instantiate()
-		rope_end_piece.global_position = last_piece.global_position
-		rope_end_piece.gravity_scale = 0.0
-		add_child(rope_end_piece)
-	else:
-		rope_end_piece = end_or_vec2
+		rope_end = RopeEndPieceScene.instantiate()
+		rope_end.global_position = rope_last_piece.global_position + Vector2.from_angle(actual_angle).normalized() * piece_length
+		rope_end.gravity_scale = endpoint_default_gravity_scale
+		add_child(rope_end)
 
+		owned_rope_end = true
+	else:
+		rope_end = end_or_vec2
 
 	# Connect the last_piece to the end of the chain.
-	var last_joint = get_joint(last_piece)
-	last_joint.node_a = last_piece.get_path()
-	last_joint.node_b = rope_end_piece.get_path()
-	last_piece.next_piece = rope_end_piece
+	var last_joint = get_joint(rope_last_piece)
+	last_joint.node_a = rope_last_piece.get_path()
+	last_joint.node_b = rope_end.get_path()
+	rope_last_piece.next_piece = rope_end
+
+	return rope_end
 
 
-func create_rope_segments(num_segments: int, shape: CapsuleShape2D, spawn_angle: float, end_pos: Variant) -> RopePiece:
-	var piece: RopePiece = rope_start
+func extend(end_or_vec2: Variant, max_segments: int = -1) -> RopePiece:
+	if owned_rope_end:
+		var rope_end: RopePiece = rope_last_piece.next_piece
+		remove_child(rope_end)
+		get_joint(rope_last_piece).node_b = ""
+	return create_rope(end_or_vec2, max_segments, rope_last_piece)
+
+
+func _create_rope_segments(start: RopePiece, num_segments: int, shape: CapsuleShape2D, spawn_angle: float, end_pos: Variant) -> RopePiece:
+	var piece: RopePiece = start
 	for i in num_segments:
 		piece = add_piece(piece, i, shape, spawn_angle)
 		var joint_pos = get_joint(piece).global_position
@@ -116,7 +147,7 @@ func add_piece(prev_piece: RopePiece, id: int, shape: CapsuleShape2D, spawn_angl
 	get_joint(piece).position.y = piece_length
 	piece.global_position = prev_joint.global_position
 	piece.rotation = spawn_angle
-	piece.gravity_scale = 0.0
+	piece.gravity_scale = piece_default_gravity_scale
 	piece.set_name("rope_piece_" + str(id))
 	prev_piece.next_piece = piece
 
@@ -203,8 +234,72 @@ func calculate_rope_length(from: RopePiece, to: Variant) -> float:
 
 func get_points() -> Array[Vector2]:
 	var points: Array[Vector2] = []
-	var walker: RopePiece = rope_start
+	var walker: RopePiece = rope_start.next_piece
 	while walker:
 		points.append(walker.global_position)
 		walker = walker.next_piece
 	return points
+
+
+func to_json() -> Dictionary:
+	var rope = []
+	var walker: RopePiece = rope_start.next_piece
+	var last_piece: RopePiece = rope_start
+	while walker:
+		rope.append(walker.rotation)
+		last_piece = walker
+		walker = walker.next_piece
+
+	return {
+		"piece_length": piece_length,
+		"close_tolerance": close_tolerance,
+		"piece_default_gravity_scale": piece_default_gravity_scale,
+		"endpoint_default_gravity_scale": endpoint_default_gravity_scale,
+		"rope": rope,
+		"end_global_position": str(last_piece.global_position),
+	}
+
+
+static func create_saved_rope(start: RopePiece, saved_rope: Variant) -> Rope:
+	return Rope.new(
+		start,
+		saved_rope.piece_length,
+		saved_rope.piece_default_gravity_scale,
+		saved_rope.endpoint_default_gravity_scale,
+	)
+
+
+func from_json(saved_rope: Variant) -> RopePiece:
+	if not "rope" in saved_rope:
+		return
+
+	rope_last_piece = _set_points(saved_rope.rope)
+
+	# Assumes free-floating endpoint.
+	var rope_end_piece: RopePiece
+	rope_end_piece = RopeEndPieceScene.instantiate()
+	rope_end_piece.global_position = Utility.string_to_vector2(saved_rope.end_global_position)
+	rope_end_piece.gravity_scale = endpoint_default_gravity_scale
+	owned_rope_end = true
+	add_child(rope_end_piece)
+
+	# Connect the last_piece to the end of the chain.
+	var last_joint = get_joint(rope_last_piece)
+	last_joint.node_a = rope_last_piece.get_path()
+	last_joint.node_b = rope_end_piece.get_path()
+	rope_last_piece.next_piece = rope_end_piece
+
+	return rope_end_piece
+
+
+func _set_points(points: Array) -> RopePiece:
+	var piece: RopePiece = rope_start
+	var shape: CapsuleShape2D = CapsuleShape2D.new()
+	shape.height = piece_length
+	shape.radius = 1.0
+
+	# Ignore the last entry which is the rope_end_piece
+	for i in range(0, points.size() - 1):
+		piece = add_piece(piece, i, shape, points[i])
+
+	return piece

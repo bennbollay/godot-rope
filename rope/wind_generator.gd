@@ -5,23 +5,23 @@ class_name WindArea2D
 enum PulseMode {
 	NONE,
 	SIN,
-	RAND
+	RAND,
 }
 
 @export var pulse_mode: PulseMode = PulseMode.NONE
-@export var speed: Vector2 = Vector2.UP * 2:
+@export var speed: Vector2 = Vector2.ZERO:
 	set(new_speed):
 		update_speed(new_speed)
 		speed = new_speed
 
-
 var bodies: Array[Node2D] = []
 var current_speed: Vector2
+
 
 func _ready() -> void:
 	body_entered.connect(_object_entered)
 	body_exited.connect(_object_exited)
-	
+
 	if pulse_mode == PulseMode.NONE:
 		return
 	if pulse_mode == PulseMode.SIN:
@@ -36,13 +36,13 @@ func is_windable(object: Node2D):
 
 
 func update_speed(new_speed: Vector2):
-	print("Speed to ", new_speed, " for ", bodies.size(), " entities")
 	for body: RopePiece in bodies:
 		body.wind_velocity -= current_speed
 		if new_speed.y < 0.0:
 			body.linear_velocity.y = new_speed.y
 		body.wind_velocity += new_speed
 	current_speed = new_speed
+
 
 func _object_entered(object: Node2D):
 	if not is_windable(object):
