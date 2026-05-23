@@ -5,9 +5,9 @@ if [ "$V" == "" ]; then
 	exit -1
 fi
 
-echo git push
-echo git tag v${V}
-echo git push --tags
+git push
+git tag v${V}
+git push --tags
 
 rm -rf rope-2d
 rm rope-2d-${V}.zip
