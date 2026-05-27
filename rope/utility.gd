@@ -13,5 +13,3 @@ static func string_to_vector2(s: String) -> Vector2:
 	# print("string_to_vector2: ", new_s, " into ", parts)
 
 	return Vector2(float(parts[0]), float(parts[1]))
-
-

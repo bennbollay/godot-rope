@@ -2,10 +2,10 @@ extends Line2D
 
 class_name RopeDrawSimpleLine
 
-var rope: Rope
+var rope: Rope2D
 
 
-func _init(draw_rope: Rope):
+func _init(draw_rope: Rope2D):
 	rope = draw_rope
 	begin_cap_mode = Line2D.LINE_CAP_ROUND
 	joint_mode = Line2D.LINE_JOINT_ROUND
@@ -56,7 +56,7 @@ func set_color(color: Color):
 	grad_texture.gradient.colors = colors
 
 
-func set_rope(draw_rope: Rope):
+func set_rope(draw_rope: Rope2D):
 	rope = draw_rope
 
 

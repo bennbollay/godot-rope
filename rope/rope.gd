@@ -1,6 +1,6 @@
 extends Node
 
-class_name Rope
+class_name Rope2D
 
 var RopePieceScene := preload("res://rope/rope_piece.tscn")
 var RopeEndPieceScene = preload("res://rope/rope_end_piece.tscn")
@@ -260,8 +260,8 @@ func to_json() -> Dictionary:
 	}
 
 
-static func create_saved_rope(start: RopePiece, saved_rope: Variant) -> Rope:
-	return Rope.new(
+static func create_saved_rope(start: RopePiece, saved_rope: Variant) -> Rope2D:
+	return Rope2D.new(
 		start,
 		saved_rope.piece_length,
 		saved_rope.piece_default_gravity_scale,
