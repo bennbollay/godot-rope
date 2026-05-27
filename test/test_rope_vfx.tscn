@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dogt8gf41hn5g"]
 
 [ext_resource type="Script" uid="uid://dwj2lkvi7f0c1" path="res://test/test_rope_vfx.gd" id="1_4hj3c"]
-[ext_resource type="PackedScene" uid="uid://bhof88x0fym2i" path="res://rope2d/rope_end_piece.tscn" id="2_toorh"]
+[ext_resource type="PackedScene" uid="uid://bhof88x0fym2i" path="res://rope2d/piece/pin_joint_anchor.tscn" id="2_toorh"]
 
 [sub_resource type="Gradient" id="Gradient_ru52x"]
 offsets = PackedFloat32Array(0, 0.2137931, 0.55263156, 0.8172414, 1)

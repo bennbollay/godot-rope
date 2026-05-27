@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cul5t6avihigd"]
 
 [ext_resource type="Script" uid="uid://cu2vi5tjeki58" path="res://test/test_rope.gd" id="1_owoih"]
-[ext_resource type="PackedScene" uid="uid://bhof88x0fym2i" path="res://rope2d/rope_end_piece.tscn" id="2_8rffi"]
+[ext_resource type="PackedScene" uid="uid://bhof88x0fym2i" path="res://rope2d/piece/pin_joint_anchor.tscn" id="2_8rffi"]
 [ext_resource type="PackedScene" uid="uid://b11br86kuy6ke" path="res://rope2d/piece/pin_joint.tscn" id="3_mp3d7"]
 [ext_resource type="Script" uid="uid://eq3krsynavvh" path="res://rope2d/piece/pin_joint.gd" id="4_7wuqp"]
 [ext_resource type="PackedScene" uid="uid://bf5jufm3igcse" path="res://rope2d/wind_generator.tscn" id="4_x7q8p"]
@@ -173,7 +173,7 @@ position = Vector2(30, 56)
 gravity_scale = 0.0
 freeze = true
 
-[node name="CollisionShape2D" parent="Node2D/RopeStartPiece5" index="0"]
+[node name="CollisionShape2D" parent="Node2D/RopeStartPiece5" index="0" unique_id=640490644]
 shape = SubResource("CircleShape2D_7wuqp")
 
 [node name="RopePiece0" parent="Node2D" unique_id=2017184850 instance=ExtResource("3_mp3d7")]
