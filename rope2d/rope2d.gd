@@ -19,8 +19,10 @@ var piece_length: float:
 
 var piece_default_gravity_scale: float = 0.0
 
+
 func create_piece() -> RopePiece:
 	return rope_start.create_piece(self)
+
 
 ## Pass in a RopeAnchor-contract conforming RopePiece as the first parameter
 func _init(
@@ -64,7 +66,7 @@ func create_rope(end_or_vec2: Variant, max_segments: int = -1, start_piece: Rope
 	if end_or_vec2 is Vector2 or floating_end:
 		rope_end = rope_start.clone(self)
 		rope_end.global_position = (rope_last_piece.get_start_position() +
-				Vector2.from_angle(actual_angle).normalized() * piece_length)
+			Vector2.from_angle(actual_angle).normalized() * piece_length )
 
 		owned_rope_end = true
 	else:
@@ -104,7 +106,7 @@ func add_piece(prev_piece: RopePiece, id: int, spawn_angle: float) -> RopePiece:
 	piece.rotation = spawn_angle
 	piece.gravity_scale = piece_default_gravity_scale
 	piece.set_name("rope_piece_" + str(id))
-	
+
 	prev_piece.set_next_piece(piece)
 
 	return piece
@@ -170,7 +172,7 @@ func calculate_rope_length(from: RopePiece, to: RopePiece) -> float:
 	while walker and walker != to:
 		if not walker.next_piece:
 			break
-		
+
 		dist += walker.get_start_position().distance_to(walker.next_piece.get_start_position())
 		walker = walker.next_piece
 

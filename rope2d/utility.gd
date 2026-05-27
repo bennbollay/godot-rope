@@ -1,6 +1,5 @@
 class_name Utility
 
-
 static func string_to_vector2(s: String) -> Vector2:
 	if not s or s.length() == 0:
 		return Vector2.ZERO
