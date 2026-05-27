@@ -15,7 +15,7 @@ script/source = "extends Line2D
 
 class_name RopeDrawGradient
 
-var rope: Rope
+var rope: Rope2D
 
 
 func _ready() -> void:
@@ -31,7 +31,7 @@ func _process(_delta: float) -> void:
 	points = rope.get_points()
 
 
-func set_rope(draw_rope: Rope):
+func set_rope(draw_rope: Rope2D):
 	rope = draw_rope
 
 
@@ -50,7 +50,7 @@ func set_color(color: Color):
 	grad_texture.gradient.colors = colors
 "
 
-[node name="RopeDrawGradient" type="Line2D"]
+[node name="RopeDrawGradient" type="Line2D" unique_id=211892333]
 rotation = 0.0016605188
 points = PackedVector2Array(5, 10, 1687.8226, 1096.1989)
 width = 50.0

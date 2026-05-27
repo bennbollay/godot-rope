@@ -2,8 +2,8 @@ extends Node
 
 class_name Rope2D
 
-var RopePieceScene := preload("res://rope/rope_piece.tscn")
-var RopeEndPieceScene = preload("res://rope/rope_end_piece.tscn")
+var RopePieceScene := preload("res://rope2d/rope_piece.tscn")
+var RopeEndPieceScene = preload("res://rope2d/rope_end_piece.tscn")
 
 const DEFAULT_PIECE_LENGTH := 20.0
 const LOCATION_TOLERANCE := 4.0
