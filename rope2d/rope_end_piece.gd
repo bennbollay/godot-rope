@@ -1,3 +1,3 @@
-extends RopePiece
+extends RopePiecePinJoint
 
 class_name RopeEndPiece
