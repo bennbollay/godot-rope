@@ -12,6 +12,9 @@ var follow_mouse: bool = false
 
 var next_piece: RopePiece
 
+var piece_parameters: RopePieceParameters
+var anchor_parameters: RopeAnchorParameters
+
 signal on_relocation_done()
 func _silence_editor_warnings():
 	on_relocation_done.get_name()
@@ -23,5 +26,15 @@ func set_next_piece(next: RopePiece):
 
 func clear_next():
 	next_piece = null
-	
+
 @abstract func get_angle_to_next() -> float
+
+## Not implemented by default
+func create_piece(_mount: Node) -> RopePiece:
+	assert(false)
+	return null
+	
+## Not implemented by default
+func clone(_mount: Node) -> RopePiece:
+	assert(false)
+	return null

@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://bhof88x0fym2i" path="res://rope2d/piece/pin_joint_anchor.tscn" id="2_8rffi"]
 [ext_resource type="PackedScene" uid="uid://b11br86kuy6ke" path="res://rope2d/piece/pin_joint.tscn" id="3_mp3d7"]
 [ext_resource type="Script" uid="uid://eq3krsynavvh" path="res://rope2d/piece/pin_joint.gd" id="4_7wuqp"]
+[ext_resource type="Script" uid="uid://jljtv8e2vyiy" path="res://rope2d/piece/pin_joint_anchor.gd" id="4_ryv3q"]
 [ext_resource type="PackedScene" uid="uid://bf5jufm3igcse" path="res://rope2d/wind_generator.tscn" id="4_x7q8p"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7wuqp"]
@@ -65,10 +66,16 @@ text = "fixed on the front and floating on the end"
 [node name="RopeStartPiece2" parent="." unique_id=872568087 instance=ExtResource("3_mp3d7")]
 position = Vector2(318, 352)
 freeze = true
+script = ExtResource("4_ryv3q")
+rope_piece_parameters = null
+rope_anchor_parameters = null
 
 [node name="RopeEndPiece2" parent="." unique_id=1472852000 instance=ExtResource("3_mp3d7")]
 position = Vector2(1621, 377)
 freeze = true
+script = ExtResource("4_ryv3q")
+rope_piece_parameters = null
+rope_anchor_parameters = null
 
 [node name="Specific length" type="Label" parent="." unique_id=1117175373]
 offset_left = 1525.0

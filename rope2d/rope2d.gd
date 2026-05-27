@@ -2,8 +2,6 @@ extends Node
 
 class_name Rope2D
 
-var RopeEndPieceScene = preload("res://rope2d/piece/pin_joint_anchor.tscn")
-
 const DEFAULT_PIECE_LENGTH := 20.0
 const LOCATION_TOLERANCE := 4.0
 
@@ -15,60 +13,28 @@ var close_tolerance: float
 
 var pending_spool_pieces: int = 0
 
-var piece_default_gravity_scale: float = 0.0
-var endpoint_default_gravity_scale: float = 0.0
+var piece_length: float:
+	get():
+		return rope_start.piece_parameters.piece_length
 
-var rope_piece_parameters: RopePieceParameters = RopePieceParameters.new()
+var piece_default_gravity_scale: float = 0.0
 
 func create_piece() -> RopePiece:
-	return RopePiecePinJoint.create(self, rope_piece_parameters)
+	return rope_start.create_piece(self)
 
-#func get_joint(n: Node2D) -> PinJoint2D:
-	#return n.get_node("PinJoint2D")
-#
-#
-#func get_shape(n: Node2D) -> CollisionShape2D:
-	#return n.get_node("CollisionShape2D")
-#
-#
-#func get_joint_a(j: PinJoint2D) -> PhysicsBody2D:
-	#return j.get_node(j.node_a)
-#
-#
-#func get_joint_b(j: PinJoint2D) -> PhysicsBody2D:
-	#if j.node_b.is_empty():
-		#return null
-	#return j.get_node(j.node_b)
-#
-#
-#func get_next(piece: RigidBody2D) -> RopePiece:
-	#return get_joint_b(get_joint(piece))
-#
-#
-#func get_angle(pivot: PinJoint2D) -> float:
-	#var node_a := get_node(pivot.node_a) as Node2D
-	#var node_b := get_node(pivot.node_b) as Node2D
-	#return node_a.global_position.angle_to_point(node_b.global_position) - PI / 2
-#
-#
-#func get_length(piece: RigidBody2D) -> float:
-	#return (get_shape(piece).shape as CapsuleShape2D).height
-
-
+## Pass in a RopeAnchor-contract conforming RopePiece as the first parameter
 func _init(
 		start: RopePiece,
-		piece_parameters: RopePieceParameters = RopePieceParameters.new(),
 		piece_default_gravity: float = 0.0,
-		end_default_gravity: float = 0.0,
 		close_tol: float = LOCATION_TOLERANCE,
 ) -> void:
 	rope_start = start
-	rope_piece_parameters = piece_parameters
 	close_tolerance = close_tol
 	piece_default_gravity_scale = piece_default_gravity
-	endpoint_default_gravity_scale = end_default_gravity
 
 
+## Create a rope starting from `rope_start` or an existing piece of the rope as `start_piece`,
+## in extend().
 func create_rope(end_or_vec2: Variant, max_segments: int = -1, start_piece: RopePiece = rope_start) -> RopePiece:
 	var end_pos: Vector2
 
@@ -82,8 +48,8 @@ func create_rope(end_or_vec2: Variant, max_segments: int = -1, start_piece: Rope
 
 	var start_pos: Vector2 = start_piece.get_start_position()
 	var distance := start_pos.distance_to(end_pos)
-	var num_segments: int = round(distance / rope_piece_parameters.piece_length)
-	var actual_angle = start_pos.angle_to_point(end_pos)
+	var num_segments: int = round(distance / piece_length)
+	var actual_angle := start_pos.angle_to_point(end_pos)
 	var spawn_angle: float = actual_angle - PI / 2
 	var floating_end: bool = false
 
@@ -96,10 +62,9 @@ func create_rope(end_or_vec2: Variant, max_segments: int = -1, start_piece: Rope
 	var rope_end: RopePiece
 
 	if end_or_vec2 is Vector2 or floating_end:
-		rope_end = RopeEndPieceScene.instantiate()
-		rope_end.global_position = rope_last_piece.global_position + Vector2.from_angle(actual_angle).normalized() * rope_piece_parameters.piece_length
-		rope_end.gravity_scale = endpoint_default_gravity_scale
-		add_child(rope_end)
+		rope_end = rope_start.clone(self)
+		rope_end.global_position = (rope_last_piece.get_start_position() +
+				Vector2.from_angle(actual_angle).normalized() * piece_length)
 
 		owned_rope_end = true
 	else:
@@ -166,15 +131,14 @@ func spool_next_piece():
 
 	# Find the position behind the current starting position
 	var start_position := rope_start.global_position
-	var new_position := start_position + back_angle_vec * rope_piece_parameters.piece_length
+	var new_position := start_position + back_angle_vec * piece_length
 
 	# print("spool from angle: ", start_angle, "(", rad_to_deg(start_angle), ") to angle: ", back_angle, "(", rad_to_deg(back_angle), ") shifting from: ", start.global_position, " to: ", new_position, " on vector: ", back_angle_vec)
 
 	# Create a new End Piece to act as a temporary anchor during physics
-	var new_start: RopePiece = RopeEndPieceScene.instantiate()
+	var new_start: RopePiece = rope_start.clone(self)
 	new_start.gravity_scale = 0.0
 	new_start.global_position = new_position
-	add_child(new_start)
 
 	# Create the new piece to insert into the rope
 	var new_piece := add_piece(new_start, 99, start_angle)
@@ -189,7 +153,7 @@ func spool_next_piece():
 
 	# Now set up the force to unspool it:
 	# await new_start.relocate_to(start_position)
-	await new_start.relocate_to(rope_piece_parameters.piece_length, start_angle, rope_start)
+	await new_start.relocate_to(piece_length, start_angle, rope_start)
 
 	# Reattach the old start and free the new start when the new start arrives
 	rope_start.set_next_piece(new_piece)
@@ -232,10 +196,8 @@ func to_json() -> Dictionary:
 		walker = walker.next_piece
 
 	return {
-		"rope_piece_parameters": rope_piece_parameters.to_json(),
 		"close_tolerance": close_tolerance,
 		"piece_default_gravity_scale": piece_default_gravity_scale,
-		"endpoint_default_gravity_scale": endpoint_default_gravity_scale,
 		"rope": rope,
 		"end_global_position": str(last_piece.global_position),
 	}
@@ -244,9 +206,7 @@ func to_json() -> Dictionary:
 static func create_saved_rope(start: RopePiece, saved_rope: Variant) -> Rope2D:
 	return Rope2D.new(
 		start,
-		RopePieceParameters.from_json(saved_rope.rope_piece_parameters),
 		saved_rope.piece_default_gravity_scale,
-		saved_rope.endpoint_default_gravity_scale,
 	)
 
 
@@ -258,11 +218,9 @@ func from_json(saved_rope: Variant) -> RopePiece:
 
 	# Assumes free-floating endpoint.
 	var rope_end_piece: RopePiece
-	rope_end_piece = RopeEndPieceScene.instantiate()
+	rope_end_piece = rope_start.clone(self)
 	rope_end_piece.global_position = Utility.string_to_vector2(saved_rope.end_global_position)
-	rope_end_piece.gravity_scale = endpoint_default_gravity_scale
 	owned_rope_end = true
-	add_child(rope_end_piece)
 
 	# Connect the last_piece to the end of the chain.
 	rope_last_piece.set_next_piece(rope_end_piece)
