@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://b11br86kuy6ke"]
 
-[ext_resource type="Script" uid="uid://eq3krsynavvh" path="res://rope2d/piece/pin_joint.gd" id="1_rtra7"]
+[ext_resource type="Script" uid="uid://eq3krsynavvh" path="res://rope2d/piece/pin_joint/pin_joint.gd" id="1_rtra7"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_a78gs"]
 radius = 1.0

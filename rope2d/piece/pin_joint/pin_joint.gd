@@ -9,7 +9,7 @@ var log_on = false
 
 
 static func create(mount: Node, params: RopePieceParameters) -> RopePiece:
-	var piece: RopePiece = load("res://rope2d/piece/pin_joint.tscn").instantiate()
+	var piece: RopePiece = load("uid://b11br86kuy6ke").instantiate()
 	mount.add_child(piece)
 	params.apply(piece)
 	return piece
@@ -50,29 +50,20 @@ func clear_next():
 	joint.node_b = ""
 
 
-func relocate_to(length: float, angle: float, target_anchor: RopePiece, force: float = 50):
-	var groove := GrooveJoint2D.new()
-	add_child(groove)
-	groove.global_position = global_position
-	groove.initial_offset = 0
-	groove.length = length
-	groove.rotate(angle)
-	groove.node_a = target_anchor.get_path()
-	groove.node_b = get_path()
+func get_relocation_path() -> String:
+	return get_path()
 
-	location_target = target_anchor.global_position
 
-	if push_rope:
-		add_constant_force((location_target - global_position) * force)
-	await on_relocation_done
+func add_relocation_force(force: Vector2):
+	add_constant_force(force)
 
 
 func update_relocation() -> bool:
-	if location_target == Vector2.INF:
+	if _location_target == Vector2.INF:
 		return false
 
-	if global_position.distance_to(location_target) < LOCATION_TOLERANCE:
-		location_target = Vector2.INF
+	if global_position.distance_to(_location_target) < Rope2D.DEFAULT_LOCATION_TOLERANCE:
+		_location_target = Vector2.INF
 		on_relocation_done.emit.call_deferred()
 		return false
 

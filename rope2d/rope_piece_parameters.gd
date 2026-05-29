@@ -1,14 +1,27 @@
 extends Resource
 
+## A collection of parameters used to configure newly created [RopePiece]
+## elements.
 class_name RopePieceParameters
 
+
+## Overloads the [annotation RigidBody2D.gravity_scale].
 @export var gravity_scale: float = 0.0
+## Overloads the [annotation RigidBody2D.mass].
 @export var mass: float = 1.0
+## Specifies if the [RopePiece] should be pushed out of
+## the [annotation Rope2D.spool] versus letting it be
+## unspooled as normal physics pull on the rope.
 @export var push_rope: bool = false
+## Overloads the [annotation PinJoint2D.softness].
 @export var pin_joint_softness: float = 0.2
+## Overloads the [annotation PinJoint2D.bias].
 @export var pin_joint_bias: float = 0.9
 
-@export var shape: CapsuleShape2D = CapsuleShape2D.new()
+## Specifies the shape of the [CollisionShape2D] used in the [RopePiece].[br]
+## [i](Default: [CapsuleShape2D])[/i]
+@export var shape: Shape2D = CapsuleShape2D.new()
+## Specifies the length of the [RopePiece].
 @export var piece_length: float = Rope2D.DEFAULT_PIECE_LENGTH
 
 

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bhof88x0fym2i"]
 
-[ext_resource type="Script" uid="uid://jljtv8e2vyiy" path="res://rope2d/piece/pin_joint_anchor.gd" id="1_kk0uk"]
+[ext_resource type="Script" uid="uid://jljtv8e2vyiy" path="res://rope2d/piece/pin_joint/pin_joint_anchor.gd" id="1_kk0uk"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_vfguq"]
 
