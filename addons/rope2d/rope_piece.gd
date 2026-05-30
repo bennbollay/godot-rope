@@ -8,7 +8,9 @@ class_name RopePiece
 ## Force added from a [WindArea2D] on this [RopePiece].
 var wind_velocity: Vector2 = Vector2(0, 0)
 var _location_target: Vector2 = Vector2.INF
-var _push_rope: bool = false
+
+## Forcefully push this piece onto the rope when unspooling.
+var push_rope: bool = false
 
 ## Push this piece towards the current [annotation CanvasItem.get_global_mouse_position].
 var follow_mouse: bool = false
@@ -50,7 +52,7 @@ func relocate_to(length: float, angle: float, target_anchor: RopePiece, force: f
 
 	_location_target = target_anchor.global_position
 
-	if _push_rope:
+	if push_rope:
 		add_relocation_force((_location_target - global_position) * force)
 	await on_relocation_done
 

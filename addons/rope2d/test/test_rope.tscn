@@ -1,11 +1,11 @@
-[gd_scene format=3 uid="uid://080axyqr5lxe"]
+[gd_scene format=3 uid="uid://cul5t6avihigd"]
 
-[ext_resource type="Script" uid="uid://cu2vi5tjeki58" path="res://test/test_rope.gd" id="1_41sgi"]
-[ext_resource type="PackedScene" uid="uid://bhof88x0fym2i" path="res://rope2d/piece/pin_joint/pin_joint_anchor.tscn" id="2_18jto"]
-[ext_resource type="PackedScene" uid="uid://b11br86kuy6ke" path="res://rope2d/piece/pin_joint/pin_joint.tscn" id="3_kafbc"]
-[ext_resource type="Script" uid="uid://jljtv8e2vyiy" path="res://rope2d/piece/pin_joint/pin_joint_anchor.gd" id="4_jl4xo"]
-[ext_resource type="PackedScene" uid="uid://bf5jufm3igcse" path="res://rope2d/wind_area2d.tscn" id="5_yxr6i"]
-[ext_resource type="Script" uid="uid://eq3krsynavvh" path="res://rope2d/piece/pin_joint/pin_joint.gd" id="6_yyjub"]
+[ext_resource type="Script" uid="uid://cu2vi5tjeki58" path="res://addons/rope2d/test/test_rope.gd" id="1_owoih"]
+[ext_resource type="PackedScene" uid="uid://bhof88x0fym2i" path="res://addons/rope2d/piece/pin_joint/pin_joint_anchor.tscn" id="2_8rffi"]
+[ext_resource type="PackedScene" uid="uid://b11br86kuy6ke" path="res://addons/rope2d/piece/pin_joint/pin_joint.tscn" id="3_mp3d7"]
+[ext_resource type="Script" uid="uid://eq3krsynavvh" path="res://addons/rope2d/piece/pin_joint/pin_joint.gd" id="4_7wuqp"]
+[ext_resource type="Script" uid="uid://jljtv8e2vyiy" path="res://addons/rope2d/piece/pin_joint/pin_joint_anchor.gd" id="4_ryv3q"]
+[ext_resource type="PackedScene" uid="uid://bf5jufm3igcse" path="res://addons/rope2d/wind_area2d.tscn" id="4_x7q8p"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7wuqp"]
 size = Vector2(244, 1314.0417)
@@ -37,7 +37,7 @@ size = Vector2(244, 650)
 radius = 50.0
 
 [node name="TestRope" type="Node2D" unique_id=594613109]
-script = ExtResource("1_41sgi")
+script = ExtResource("1_owoih")
 
 [node name="Fixed on Both Ends" type="Label" parent="." unique_id=250720602]
 offset_left = 181.0
@@ -46,12 +46,12 @@ offset_right = 326.0
 offset_bottom = 84.0
 text = "fixed on both ends"
 
-[node name="RopePinJointAnchor" parent="." unique_id=1603205806 instance=ExtResource("2_18jto")]
+[node name="RopeStartPiece" parent="." unique_id=1603205806 instance=ExtResource("2_8rffi")]
 position = Vector2(314, 98)
 gravity_scale = 0.0
 freeze = true
 
-[node name="RopeEndPiece" parent="." unique_id=1010319783 instance=ExtResource("2_18jto")]
+[node name="RopeEndPiece" parent="." unique_id=1010319783 instance=ExtResource("2_8rffi")]
 position = Vector2(1618, 108)
 gravity_scale = 0.1
 freeze = true
@@ -63,17 +63,17 @@ offset_right = 389.0
 offset_bottom = 322.0
 text = "fixed on the front and floating on the end"
 
-[node name="RopeStartPiece2" parent="." unique_id=872568087 instance=ExtResource("3_kafbc")]
+[node name="RopeStartPiece2" parent="." unique_id=872568087 instance=ExtResource("3_mp3d7")]
 position = Vector2(318, 352)
 freeze = true
-script = ExtResource("4_jl4xo")
+script = ExtResource("4_ryv3q")
 rope_piece_parameters = null
 rope_anchor_parameters = null
 
-[node name="RopeEndPiece2" parent="." unique_id=1472852000 instance=ExtResource("3_kafbc")]
+[node name="RopeEndPiece2" parent="." unique_id=1472852000 instance=ExtResource("3_mp3d7")]
 position = Vector2(1621, 377)
 freeze = true
-script = ExtResource("4_jl4xo")
+script = ExtResource("4_ryv3q")
 rope_piece_parameters = null
 rope_anchor_parameters = null
 
@@ -84,7 +84,7 @@ offset_right = 1845.0
 offset_bottom = 581.0
 text = "creating a specific length"
 
-[node name="RopeStartPiece3" parent="." unique_id=579079364 instance=ExtResource("2_18jto")]
+[node name="RopeStartPiece3" parent="." unique_id=579079364 instance=ExtResource("2_8rffi")]
 position = Vector2(1630, 609)
 gravity_scale = 0.0
 freeze = true
@@ -97,12 +97,12 @@ offset_bottom = 736.0
 text = "spooling (press down)
 draw line (press left or right)"
 
-[node name="RopeStartPiece4" parent="." unique_id=1823256180 instance=ExtResource("2_18jto")]
+[node name="RopeStartPiece4" parent="." unique_id=1823256180 instance=ExtResource("2_8rffi")]
 position = Vector2(602, 770)
 gravity_scale = 0.0
 freeze = true
 
-[node name="RopeEndPiece4" parent="." unique_id=122010270 instance=ExtResource("2_18jto")]
+[node name="RopeEndPiece4" parent="." unique_id=122010270 instance=ExtResource("2_8rffi")]
 position = Vector2(1623, 795)
 gravity_scale = 0.1
 freeze = true
@@ -114,17 +114,17 @@ offset_right = 887.0
 offset_bottom = 962.0
 text = "extend  (press enter)"
 
-[node name="RopeStartPiece6" parent="." unique_id=1797017379 instance=ExtResource("2_18jto")]
+[node name="RopeStartPiece6" parent="." unique_id=1797017379 instance=ExtResource("2_8rffi")]
 position = Vector2(630, 943)
 gravity_scale = 0.0
 freeze = true
 
-[node name="RopeEndPiece6" parent="." unique_id=1805604080 instance=ExtResource("2_18jto")]
+[node name="RopeEndPiece6" parent="." unique_id=1805604080 instance=ExtResource("2_8rffi")]
 position = Vector2(1651, 968)
 gravity_scale = 0.1
 freeze = true
 
-[node name="WindGenerator2" parent="." unique_id=1990789280 instance=ExtResource("5_yxr6i")]
+[node name="WindGenerator2" parent="." unique_id=1990789280 instance=ExtResource("4_x7q8p")]
 position = Vector2(580, 775)
 rotation = 1.5730299
 speed = Vector2(2, 0)
@@ -152,7 +152,7 @@ initial_offset = 1.0
 [node name="GroveStartPiece" type="RigidBody2D" parent="Node2D" unique_id=339057011]
 position = Vector2(30, 6)
 collision_mask = 16
-script = ExtResource("6_yyjub")
+script = ExtResource("4_7wuqp")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Node2D/GroveStartPiece" unique_id=164129734]
 shape = SubResource("CircleShape2D_vfguq")
@@ -163,7 +163,7 @@ node_b = NodePath("../../GroveRopePiece")
 bias = 0.9
 softness = 0.2
 
-[node name="GroveRopePiece" parent="Node2D" unique_id=699513780 instance=ExtResource("3_kafbc")]
+[node name="GroveRopePiece" parent="Node2D" unique_id=699513780 instance=ExtResource("3_mp3d7")]
 position = Vector2(30, 6)
 
 [node name="CollisionShape2D" parent="Node2D/GroveRopePiece" index="0" unique_id=1382224202]
@@ -175,7 +175,7 @@ position = Vector2(0, 50)
 node_a = NodePath("..")
 node_b = NodePath("../../RopePiece0")
 
-[node name="RopeStartPiece5" parent="Node2D" unique_id=2102625664 instance=ExtResource("2_18jto")]
+[node name="RopeStartPiece5" parent="Node2D" unique_id=2102625664 instance=ExtResource("2_8rffi")]
 position = Vector2(30, 56)
 gravity_scale = 0.0
 freeze = true
@@ -183,7 +183,7 @@ freeze = true
 [node name="CollisionShape2D" parent="Node2D/RopeStartPiece5" index="0" unique_id=640490644]
 shape = SubResource("CircleShape2D_7wuqp")
 
-[node name="RopePiece0" parent="Node2D" unique_id=2017184850 instance=ExtResource("3_kafbc")]
+[node name="RopePiece0" parent="Node2D" unique_id=2017184850 instance=ExtResource("3_mp3d7")]
 position = Vector2(30, 56)
 
 [node name="CollisionShape2D" parent="Node2D/RopePiece0" index="0" unique_id=1382224202]
@@ -195,7 +195,7 @@ position = Vector2(0, 50)
 node_a = NodePath("..")
 node_b = NodePath("../../RopePiece1")
 
-[node name="RopePiece1" parent="Node2D" unique_id=570127016 instance=ExtResource("3_kafbc")]
+[node name="RopePiece1" parent="Node2D" unique_id=570127016 instance=ExtResource("3_mp3d7")]
 position = Vector2(30, 107)
 
 [node name="CollisionShape2D" parent="Node2D/RopePiece1" index="0" unique_id=1382224202]
@@ -207,7 +207,7 @@ position = Vector2(0, 50)
 node_a = NodePath("..")
 node_b = NodePath("../../RopePiece2")
 
-[node name="RopePiece2" parent="Node2D" unique_id=1756740587 instance=ExtResource("3_kafbc")]
+[node name="RopePiece2" parent="Node2D" unique_id=1756740587 instance=ExtResource("3_mp3d7")]
 position = Vector2(30, 157)
 
 [node name="CollisionShape2D" parent="Node2D/RopePiece2" index="0" unique_id=1382224202]
@@ -219,7 +219,7 @@ position = Vector2(0, 50)
 node_a = NodePath("..")
 node_b = NodePath("../../RopePiece3")
 
-[node name="RopePiece3" parent="Node2D" unique_id=1703540006 instance=ExtResource("3_kafbc")]
+[node name="RopePiece3" parent="Node2D" unique_id=1703540006 instance=ExtResource("3_mp3d7")]
 position = Vector2(30, 207)
 
 [node name="CollisionShape2D" parent="Node2D/RopePiece3" index="0" unique_id=1382224202]
@@ -231,7 +231,7 @@ position = Vector2(0, 50)
 node_a = NodePath("..")
 node_b = NodePath("../../RopePiece4")
 
-[node name="RopePiece4" parent="Node2D" unique_id=1828378891 instance=ExtResource("3_kafbc")]
+[node name="RopePiece4" parent="Node2D" unique_id=1828378891 instance=ExtResource("3_mp3d7")]
 position = Vector2(30, 260)
 
 [node name="CollisionShape2D" parent="Node2D/RopePiece4" index="0" unique_id=1382224202]
@@ -249,17 +249,17 @@ offset_right = 831.0
 offset_bottom = 956.0
 text = "wind"
 
-[node name="RopeStartPiece5" parent="." unique_id=839302895 instance=ExtResource("2_18jto")]
+[node name="RopeStartPiece5" parent="." unique_id=839302895 instance=ExtResource("2_8rffi")]
 position = Vector2(666, 1079)
 gravity_scale = 0.0
 freeze = true
 
-[node name="RopeEndPiece5" parent="." unique_id=1487310473 instance=ExtResource("2_18jto")]
+[node name="RopeEndPiece5" parent="." unique_id=1487310473 instance=ExtResource("2_8rffi")]
 position = Vector2(988, 1189)
 gravity_scale = 0.0
 freeze = true
 
-[node name="WindGenerator" parent="." unique_id=1504310487 instance=ExtResource("5_yxr6i")]
+[node name="WindGenerator" parent="." unique_id=1504310487 instance=ExtResource("4_x7q8p")]
 position = Vector2(571, 1082)
 rotation = 1.5730299
 speed = Vector2(2, 0)
