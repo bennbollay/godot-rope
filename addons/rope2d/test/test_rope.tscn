@@ -67,15 +67,11 @@ text = "fixed on the front and floating on the end"
 position = Vector2(318, 352)
 freeze = true
 script = ExtResource("4_ryv3q")
-rope_piece_parameters = null
-rope_anchor_parameters = null
 
 [node name="RopeEndPiece2" parent="." unique_id=1472852000 instance=ExtResource("3_mp3d7")]
 position = Vector2(1621, 377)
 freeze = true
 script = ExtResource("4_ryv3q")
-rope_piece_parameters = null
-rope_anchor_parameters = null
 
 [node name="Specific length" type="Label" parent="." unique_id=1117175373]
 offset_left = 1525.0
