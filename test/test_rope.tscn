@@ -5,7 +5,7 @@
 [ext_resource type="PackedScene" uid="uid://b11br86kuy6ke" path="res://rope2d/piece/pin_joint/pin_joint.tscn" id="3_mp3d7"]
 [ext_resource type="Script" uid="uid://eq3krsynavvh" path="res://rope2d/piece/pin_joint/pin_joint.gd" id="4_7wuqp"]
 [ext_resource type="Script" uid="uid://jljtv8e2vyiy" path="res://rope2d/piece/pin_joint/pin_joint_anchor.gd" id="4_ryv3q"]
-[ext_resource type="PackedScene" uid="uid://bf5jufm3igcse" path="res://rope2d/wind_generator.tscn" id="4_x7q8p"]
+[ext_resource type="PackedScene" uid="uid://bf5jufm3igcse" path="res://rope2d/wind_area2d.tscn" id="4_x7q8p"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7wuqp"]
 size = Vector2(244, 1314.0417)

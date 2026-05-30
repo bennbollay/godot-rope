@@ -14,6 +14,7 @@ rm rope2d-${V}.zip
 
 mkdir wip
 cp -r rope2d/* wip
+cp -r docs wip/docs
 cp -r test wip/test
 echo ${V} >rope-2d/VERSION
 cp README.md wip

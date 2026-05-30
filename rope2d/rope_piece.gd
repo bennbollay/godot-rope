@@ -5,7 +5,7 @@ extends RigidBody2D
 ## derived from.
 class_name RopePiece
 
-## Force added from a [WindGenerator] on this [RopePiece].
+## Force added from a [WindArea2D] on this [RopePiece].
 var wind_velocity: Vector2 = Vector2(0, 0)
 var _location_target: Vector2 = Vector2.INF
 var _push_rope: bool = false

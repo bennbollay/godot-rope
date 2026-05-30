@@ -10,6 +10,12 @@ This project creates a Rope class a variety of different ways to support physics
 
 See [test/test_rope.gd](test/test_rope.gd) for the example usage represented here:
 
+# Documentation
+
+Inline documentation in Godot is available.
+
+Additionally, you can read the documentation [here](./docs/api/rope2_d.md).
+
 ## Fixed on both ends
 
 Using the `RopeEndPiece` node as starting and/or end points, create a `Rope` that extends from that starting node to a specified ending node.

@@ -34,7 +34,7 @@ var _close_tolerance: float
 var _pending_spool_pieces: int = 0
 
 ## Returns the [annotation RopePieceParameters.piece_length] value specified
-## in the [param _init.start] [RopeAnchor] used to create this [Rope2D].
+## in the [method _init].start [RopeAnchor] used to create this [Rope2D].
 var piece_length: float:
 	get():
 		return _rope_start.piece_parameters.piece_length
