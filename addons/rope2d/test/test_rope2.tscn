@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://cin1bde63oowh"]
+
+[ext_resource type="Script" uid="uid://e4erd0bi0dy6" path="res://addons/rope2d/rope2d.gd" id="1_eovg1"]
+
+[node name="TestRope2" type="Node2D" unique_id=2086491870]
+
+[node name="Rope2D" type="Node2D" parent="." unique_id=717348956 node_paths=PackedStringArray("end_position_node")]
+position = Vector2(398.0005, 204.59985)
+script = ExtResource("1_eovg1")
+ready_action = 1
+end_position_node = NodePath("../Target")
+metadata/_custom_type_script = "uid://e4erd0bi0dy6"
+
+[node name="Target" type="Node2D" parent="." unique_id=851591348]
+position = Vector2(1332.0005, 192.59985)

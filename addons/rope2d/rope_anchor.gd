@@ -15,4 +15,4 @@ class_name RopeAnchor
 @abstract func create_piece(mount: Node) -> RopePiece
 
 ## Returns a [RopeAnchor] that shares the configuration of this [RopeAnchor].
-@abstract func clone(mount: Node) -> RopeAnchor
+@abstract func create_anchor(mount: Node) -> RopeAnchor

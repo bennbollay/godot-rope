@@ -8,12 +8,17 @@ var log_on = false
 @onready var joint: PinJoint2D = $PinJoint2D
 
 
-static func create(mount: Node, params: RopePieceParameters) -> RopePiece:
+static func create_piece(mount: Node, params: RopePieceParameters) -> RopePiece:
 	var piece: RopePiece = load("uid://b11br86kuy6ke").instantiate()
 	mount.add_child(piece)
 	params.apply(piece)
 	return piece
 
+static func create_anchor(mount: Node, params: RopeAnchorParameters) -> RopePiece:
+	var anchor: RopePiece = load("uid://bhof88x0fym2i").instantiate()
+	mount.add_child(anchor)
+	params.apply(anchor)
+	return anchor
 
 func _ready() -> void:
 	joint.node_a = get_path()
@@ -24,10 +29,11 @@ func get_angle_to_next() -> float:
 	return global_position.angle_to_point(node_b.global_position) - PI / 2
 
 
-func set_shape(shape: CapsuleShape2D, piece_length: float):
+func set_shape(shape: Shape2D, piece_length: float):
 	collision_shape.shape = shape
-	collision_shape.position.y = piece_length / 2
-	joint.position.y = piece_length
+	if shape is CapsuleShape2D:
+		collision_shape.position.y = piece_length / 2
+		joint.position.y = piece_length
 
 
 func set_joint_parameters(bias: float, softness: float):
@@ -35,13 +41,8 @@ func set_joint_parameters(bias: float, softness: float):
 	joint.softness = softness
 
 
-func get_start_position() -> Vector2:
-	return joint.global_position
-
-
 func set_next_piece(next: RopePiece):
 	super(next)
-	joint.node_a = get_path()
 	joint.node_b = next.get_path()
 
 
@@ -53,9 +54,38 @@ func clear_next():
 func get_relocation_path() -> String:
 	return get_path()
 
+func as_rigidbody() -> RigidBody2D:
+	return (self as Variant as RigidBody2D)
 
 func add_relocation_force(force: Vector2):
-	add_constant_force(force)
+	as_rigidbody().add_constant_force(force)
+
+func apply_piece_parameters(p: RopePieceParameters):
+	var r: RigidBody2D = as_rigidbody()
+	r.gravity_scale = p.gravity_scale
+	r.mass = p.mass
+	r.linear_damp_mode = p.linear_damp_mode
+	r.linear_damp = p.linear_damp
+	r.angular_damp_mode = p.angular_damp_mode
+	r.angular_damp = p.angular_damp
+	r.collision_layer = p.collision_layer
+	r.collision_mask = p.collision_mask
+	
+	push_rope = p.push_rope
+	
+	set_joint_parameters(p.pin_joint_bias, p.pin_joint_softness)
+	set_shape(p.shape, p.piece_length)
+
+func apply_anchor_parameters(p: RopeAnchorParameters):
+	var r: RigidBody2D = as_rigidbody()
+	r.gravity_scale = p.gravity_scale
+	r.mass = p.mass
+
+func get_prev_position() -> Vector2:
+	return as_rigidbody().global_position
+
+func get_next_position() -> Vector2:
+	return joint.global_position
 
 
 func update_relocation() -> bool:

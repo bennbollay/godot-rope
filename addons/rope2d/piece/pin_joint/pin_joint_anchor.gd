@@ -21,16 +21,15 @@ class_name RopeAnchorPinJoint
 
 func _ready() -> void:
 	super()
+	var shape := CircleShape2D.new()
+	shape.radius = 10
+	rope_anchor_parameters.rope_piece_parameters.shape = shape
+	
 	piece_parameters = rope_piece_parameters
 	anchor_parameters = rope_anchor_parameters
 
-
-func create_piece(mount: Node) -> RopePiecePinJoint:
-	return RopePiecePinJoint.create(mount, piece_parameters)
-
-
-func clone(mount: Node) -> RopePiece:
-	var anchor: RopePiece = load("uid://bhof88x0fym2i").instantiate()
-	mount.add_child(anchor)
-	anchor_parameters.apply(anchor)
-	return anchor
+## Prevent changing the shape of the anchor to the default CapsuleShape2D.
+func set_shape(shape: Shape2D, piece_length: float):
+	if shape is CapsuleShape2D:
+		return
+	super(shape, piece_length)

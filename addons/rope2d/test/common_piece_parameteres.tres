@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="RopePieceParameters" format=3 uid="uid://cglgvwhoobfod"]
+
+[ext_resource type="Script" uid="uid://bfxcw3p1krtyi" path="res://addons/rope2d/rope_piece_parameters.gd" id="1_0r56d"]
+
+[resource]
+script = ExtResource("1_0r56d")
+linear_damp = 20.0
+angular_damp = 20.0
+metadata/_custom_type_script = "uid://bfxcw3p1krtyi"

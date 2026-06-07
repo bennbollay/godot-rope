@@ -7,15 +7,16 @@ class_name RopeAnchorParameters
 ## Overloads the [annotation RigidBody2D.gravity_scale].
 @export var gravity_scale: float
 ## Overloads the [annotation RigidBody2D.mass].
-@export var mass: float
+@export var mass: float = 1.0
 
-func _init(gravity_scale_: float = 0.0, mass_: float = 1.0) -> void:
-	gravity_scale = gravity_scale_
-	mass = mass_
+## Parameters to apply to the piece after cloning
+@export var rope_piece_parameters: RopePieceParameters = RopePieceParameters.new()
 
+func _init() -> void:
+	pass
 
 ## Apply the included overloads to the new [RopeAnchor].  Invoked during the
 ## [annotation Rope2D.spool] or [annotation Rope2D.extend] process.
 func apply(anchor: RopePiece):
-	anchor.gravity_scale = gravity_scale
-	anchor.mass = mass
+	anchor.apply_piece_parameters(rope_piece_parameters)
+	anchor.apply_anchor_parameters(self)

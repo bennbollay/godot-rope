@@ -1,0 +1,71 @@
+[gd_scene format=3 uid="uid://crcpma0v8hibs"]
+
+[ext_resource type="Script" uid="uid://c3y3b7bnvxk21" path="res://addons/rope2d/piece/grove_pin/groove_pin_anchor.gd" id="1_h1ewq"]
+[ext_resource type="Script" uid="uid://1rxp7h2tfmnk" path="res://addons/rope2d/piece/grove_pin/grove_pin.gd" id="2_var3e"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_var3e"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_peyp2"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_kra6f"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ul0r6"]
+radius = 1.0
+height = 4.0
+
+[node name="TestGpManual" type="Node2D" unique_id=1584005215]
+
+[node name="RopeGroovePinAnchor" type="Node2D" parent="." unique_id=1890322783]
+position = Vector2(800, 300)
+script = ExtResource("1_h1ewq")
+freeze = true
+
+[node name="Pin" type="RigidBody2D" parent="RopeGroovePinAnchor" unique_id=1543962276]
+collision_layer = 0
+collision_mask = 0
+metadata/_custom_type_script = "uid://dryl0ed7hg0e4"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RopeGroovePinAnchor/Pin" unique_id=372698116]
+shape = SubResource("CircleShape2D_var3e")
+
+[node name="PinJoint2D" type="PinJoint2D" parent="RopeGroovePinAnchor/Pin" unique_id=1901699321]
+node_a = NodePath("..")
+node_b = NodePath("../../Groove")
+
+[node name="Groove" type="RigidBody2D" parent="RopeGroovePinAnchor" unique_id=1230771712]
+collision_layer = 0
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RopeGroovePinAnchor/Groove" unique_id=1115940093]
+shape = SubResource("CircleShape2D_peyp2")
+
+[node name="GrooveJoint2D" type="GrooveJoint2D" parent="RopeGroovePinAnchor/Groove" unique_id=1854114500]
+node_a = NodePath("..")
+node_b = NodePath("../../../GrovePinRopePiece/Pin")
+initial_offset = 50.0
+
+[node name="GrovePinRopePiece" type="Node2D" parent="." unique_id=1546304813]
+script = ExtResource("2_var3e")
+
+[node name="Pin" type="RigidBody2D" parent="GrovePinRopePiece" unique_id=64746790]
+position = Vector2(800, 350)
+metadata/_custom_type_script = "uid://dryl0ed7hg0e4"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GrovePinRopePiece/Pin" unique_id=1562547884]
+shape = SubResource("CircleShape2D_kra6f")
+
+[node name="PinJoint2D" type="PinJoint2D" parent="GrovePinRopePiece/Pin" unique_id=2079668455]
+node_a = NodePath("..")
+node_b = NodePath("../../Groove")
+
+[node name="Groove" type="RigidBody2D" parent="GrovePinRopePiece" unique_id=840569037]
+position = Vector2(800, 350)
+gravity_scale = 0.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GrovePinRopePiece/Groove" unique_id=936578772]
+position = Vector2(0, 2)
+shape = SubResource("CapsuleShape2D_ul0r6")
+
+[node name="GrooveJoint2D" type="GrooveJoint2D" parent="GrovePinRopePiece/Groove" unique_id=1580882717]
+node_a = NodePath("..")
+initial_offset = 50.0

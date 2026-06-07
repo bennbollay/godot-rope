@@ -2,33 +2,10 @@
 
 [ext_resource type="Script" uid="uid://cu2vi5tjeki58" path="res://addons/rope2d/test/test_rope.gd" id="1_owoih"]
 [ext_resource type="PackedScene" uid="uid://bhof88x0fym2i" path="res://addons/rope2d/piece/pin_joint/pin_joint_anchor.tscn" id="2_8rffi"]
-[ext_resource type="PackedScene" uid="uid://b11br86kuy6ke" path="res://addons/rope2d/piece/pin_joint/pin_joint.tscn" id="3_mp3d7"]
-[ext_resource type="Script" uid="uid://eq3krsynavvh" path="res://addons/rope2d/piece/pin_joint/pin_joint.gd" id="4_7wuqp"]
-[ext_resource type="Script" uid="uid://jljtv8e2vyiy" path="res://addons/rope2d/piece/pin_joint/pin_joint_anchor.gd" id="4_ryv3q"]
 [ext_resource type="PackedScene" uid="uid://bf5jufm3igcse" path="res://addons/rope2d/wind_area2d.tscn" id="4_x7q8p"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7wuqp"]
 size = Vector2(244, 1314.0417)
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_vfguq"]
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_w65ld"]
-radius = 1.0
-height = 50.0
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_7wuqp"]
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_52fop"]
-radius = 1.0
-height = 50.0
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_07vpl"]
-radius = 1.0
-height = 50.0
-
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_u6fra"]
-radius = 1.0
-height = 50.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_x7q8p"]
 size = Vector2(244, 650)
@@ -63,15 +40,13 @@ offset_right = 389.0
 offset_bottom = 322.0
 text = "fixed on the front and floating on the end"
 
-[node name="RopeStartPiece2" parent="." unique_id=872568087 instance=ExtResource("3_mp3d7")]
+[node name="RopeStartPiece2" parent="." unique_id=872568087 instance=ExtResource("2_8rffi")]
 position = Vector2(318, 352)
 freeze = true
-script = ExtResource("4_ryv3q")
 
-[node name="RopeEndPiece2" parent="." unique_id=1472852000 instance=ExtResource("3_mp3d7")]
+[node name="RopeEndPiece2" parent="." unique_id=1472852000 instance=ExtResource("2_8rffi")]
 position = Vector2(1621, 377)
 freeze = true
-script = ExtResource("4_ryv3q")
 
 [node name="Specific length" type="Label" parent="." unique_id=1117175373]
 offset_left = 1525.0
@@ -136,108 +111,6 @@ offset_right = 591.0
 offset_bottom = 482.0
 text = "manual"
 
-[node name="Node2D" type="Node2D" parent="." unique_id=1294096468]
-position = Vector2(274, 501)
-
-[node name="ExpansionGroveJoint2D" type="GrooveJoint2D" parent="Node2D" unique_id=1094228675]
-position = Vector2(30, 6)
-node_a = NodePath("../RopeStartPiece5")
-node_b = NodePath("../GroveStartPiece")
-initial_offset = 1.0
-
-[node name="GroveStartPiece" type="RigidBody2D" parent="Node2D" unique_id=339057011]
-position = Vector2(30, 6)
-collision_mask = 16
-script = ExtResource("4_7wuqp")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Node2D/GroveStartPiece" unique_id=164129734]
-shape = SubResource("CircleShape2D_vfguq")
-
-[node name="PinJoint2D" type="PinJoint2D" parent="Node2D/GroveStartPiece" unique_id=1077548266]
-node_a = NodePath("..")
-node_b = NodePath("../../GroveRopePiece")
-bias = 0.9
-softness = 0.2
-
-[node name="GroveRopePiece" parent="Node2D" unique_id=699513780 instance=ExtResource("3_mp3d7")]
-position = Vector2(30, 6)
-
-[node name="CollisionShape2D" parent="Node2D/GroveRopePiece" index="0" unique_id=1382224202]
-position = Vector2(0, 25)
-shape = SubResource("CapsuleShape2D_w65ld")
-
-[node name="PinJoint2D" parent="Node2D/GroveRopePiece" index="1" unique_id=329071792]
-position = Vector2(0, 50)
-node_a = NodePath("..")
-node_b = NodePath("../../RopePiece0")
-
-[node name="RopeStartPiece5" parent="Node2D" unique_id=2102625664 instance=ExtResource("2_8rffi")]
-position = Vector2(30, 56)
-gravity_scale = 0.0
-freeze = true
-
-[node name="CollisionShape2D" parent="Node2D/RopeStartPiece5" index="0" unique_id=640490644]
-shape = SubResource("CircleShape2D_7wuqp")
-
-[node name="RopePiece0" parent="Node2D" unique_id=2017184850 instance=ExtResource("3_mp3d7")]
-position = Vector2(30, 56)
-
-[node name="CollisionShape2D" parent="Node2D/RopePiece0" index="0" unique_id=1382224202]
-position = Vector2(0, 25)
-shape = SubResource("CapsuleShape2D_w65ld")
-
-[node name="PinJoint2D" parent="Node2D/RopePiece0" index="1" unique_id=329071792]
-position = Vector2(0, 50)
-node_a = NodePath("..")
-node_b = NodePath("../../RopePiece1")
-
-[node name="RopePiece1" parent="Node2D" unique_id=570127016 instance=ExtResource("3_mp3d7")]
-position = Vector2(30, 107)
-
-[node name="CollisionShape2D" parent="Node2D/RopePiece1" index="0" unique_id=1382224202]
-position = Vector2(0, 25)
-shape = SubResource("CapsuleShape2D_w65ld")
-
-[node name="PinJoint2D" parent="Node2D/RopePiece1" index="1" unique_id=329071792]
-position = Vector2(0, 50)
-node_a = NodePath("..")
-node_b = NodePath("../../RopePiece2")
-
-[node name="RopePiece2" parent="Node2D" unique_id=1756740587 instance=ExtResource("3_mp3d7")]
-position = Vector2(30, 157)
-
-[node name="CollisionShape2D" parent="Node2D/RopePiece2" index="0" unique_id=1382224202]
-position = Vector2(0, 25)
-shape = SubResource("CapsuleShape2D_52fop")
-
-[node name="PinJoint2D" parent="Node2D/RopePiece2" index="1" unique_id=329071792]
-position = Vector2(0, 50)
-node_a = NodePath("..")
-node_b = NodePath("../../RopePiece3")
-
-[node name="RopePiece3" parent="Node2D" unique_id=1703540006 instance=ExtResource("3_mp3d7")]
-position = Vector2(30, 207)
-
-[node name="CollisionShape2D" parent="Node2D/RopePiece3" index="0" unique_id=1382224202]
-position = Vector2(0, 25)
-shape = SubResource("CapsuleShape2D_07vpl")
-
-[node name="PinJoint2D" parent="Node2D/RopePiece3" index="1" unique_id=329071792]
-position = Vector2(0, 50)
-node_a = NodePath("..")
-node_b = NodePath("../../RopePiece4")
-
-[node name="RopePiece4" parent="Node2D" unique_id=1828378891 instance=ExtResource("3_mp3d7")]
-position = Vector2(30, 260)
-
-[node name="CollisionShape2D" parent="Node2D/RopePiece4" index="0" unique_id=1382224202]
-position = Vector2(0, 25)
-shape = SubResource("CapsuleShape2D_u6fra")
-
-[node name="PinJoint2D" parent="Node2D/RopePiece4" index="1" unique_id=329071792]
-position = Vector2(0, 50)
-node_a = NodePath("..")
-
 [node name="Wind Example" type="Label" parent="." unique_id=1393818740]
 offset_left = 511.0
 offset_top = 933.0
@@ -271,11 +144,3 @@ collision_mask = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Mouse" unique_id=654598226]
 shape = SubResource("CircleShape2D_x7q8p")
-
-[editable path="Node2D/GroveRopePiece"]
-[editable path="Node2D/RopeStartPiece5"]
-[editable path="Node2D/RopePiece0"]
-[editable path="Node2D/RopePiece1"]
-[editable path="Node2D/RopePiece2"]
-[editable path="Node2D/RopePiece3"]
-[editable path="Node2D/RopePiece4"]
