@@ -14,13 +14,14 @@ static func create_piece(mount: Node, params: RopePieceParameters) -> RopePiece:
 	params.apply(piece)
 	return piece
 
-static func create_anchor(mount: Node, params: RopeAnchorParameters) -> RopePiece:
+static func create_anchor(mount: Node, params: RopePieceParameters) -> RopePiece:
 	var anchor: RopePiece = load("uid://bhof88x0fym2i").instantiate()
 	mount.add_child(anchor)
 	params.apply(anchor)
 	return anchor
 
 func _ready() -> void:
+	print(self, ": _ready")
 	joint.node_a = get_path()
 
 
@@ -75,11 +76,6 @@ func apply_piece_parameters(p: RopePieceParameters):
 	
 	set_joint_parameters(p.pin_joint_bias, p.pin_joint_softness)
 	set_shape(p.shape, p.piece_length)
-
-func apply_anchor_parameters(p: RopeAnchorParameters):
-	var r: RigidBody2D = as_rigidbody()
-	r.gravity_scale = p.gravity_scale
-	r.mass = p.mass
 
 func get_prev_position() -> Vector2:
 	return as_rigidbody().global_position

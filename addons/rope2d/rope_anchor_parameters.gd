@@ -2,7 +2,7 @@ extends Resource
 ## A collection of parameters that are used to configure new [RopeAnchor] when they
 ## are created, for example when a [Rope2D] has a free-floating endpoint that is
 ## not attached to a specific [RopeAnchor] in the scene.
-class_name RopeAnchorParameters
+class_name RopeAnchorParametersXXX
 
 ## Overloads the [annotation RigidBody2D.gravity_scale].
 @export var gravity_scale: float

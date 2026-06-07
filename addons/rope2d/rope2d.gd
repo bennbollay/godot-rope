@@ -4,8 +4,18 @@ class_name Rope2D
 ## A class to manage and create Rope2D chains.
 
 enum RopeType {
-	ROPE_TYPE_PINJOINT = 1,
-	ROPE_TYPE_GROOVEPIN = 2,
+	## Each [RopePiece] uses a [RigidBody2D]+[CollisionShape2D] with the joint dynamics managed
+	## by a [PinJoint2D].  The default shape of the [CollisionShape2D] is a [CapsuleShape2D],
+	## which can be changed via [member rope_piece_parameteers].[br]
+	## [br]
+	## Use a [constant Rope2D.ROPE_TYPE_PINJOINT] when the length of the [Rope2D]
+	## is allowed to flex (approximately 1 piece length per 20 pieces) in response
+	## to certain physics stressors. Less likely than
+	## [constant Rope2D.ROPE_TYPE_GROOVEPIN] to suffer catastrophic physics failure
+	## in most situations.
+	ROPE_TYPE_PINJOINT,
+	## Not currently supported; does nothing.
+	ROPE_TYPE_GROOVEPIN,
 }
 
 enum ReadyAction {
@@ -16,7 +26,7 @@ enum ReadyAction {
 	## of the node specified in [end_node].
 	CREATE_TO_POSITION,
 	
-	## Create a new rope to a [RopeAnchor] created under [ending_anchor_mount_point].
+	## Create a new rope to a [RopeAnchor] created under [member ending_anchor_mount_point].
 	CREATE_TO_MOUNT,
 }
 
@@ -29,43 +39,70 @@ const DEFAULT_PIECE_LENGTH := 20.0
 ## or location to be considered as having arrived.
 const DEFAULT_LOCATION_TOLERANCE := 4.0
 
+## Choose the type of the joing for this rope; currently only [constant Rope2D.ROPE_TYPE_PINJOINT]
+## fully supported.
 @export_custom(PROPERTY_HINT_ENUM, "Pin Joint,Groove Pin") var rope_type: RopeType = RopeType.ROPE_TYPE_PINJOINT
-@export var rope_anchor_parameters: RopeAnchorParameters
+
+## A set of parameters that are applied to the [RopeAnchor] at the start of the Rope2D.
+@export var rope_starting_anchor_parameters: RopePieceParameters
+## A set of parameters that are applied to the [RopeAnchor] at the start of the Rope2D.
+@export var rope_ending_anchor_parameters: RopePieceParameters
+
+## A set of parameters that are applied to each created [RopePiece], to allow for controlling
+## various physics properties.
 @export var rope_piece_parameters: RopePieceParameters
+## Default value for how close a [RopePiece] has to get to a target [RopeAnchor]
+## or location to be considered as having arrived.
 @export var close_tolerance: float = DEFAULT_LOCATION_TOLERANCE
 
-## When [_ready] and either [end_position] or [ending_anchor_mount_point]
+## When [method _ready] and either [member end_position] or [member ending_anchor_mount_point]
 ## are set, create the Rope2D.
 @export var ready_action: ReadyAction = ReadyAction.NOTHING
 
-## Specify the target position for the [Rope2D], used when [create()]
-## is called or on [_ready] if [ready_action] is set to
-## [ReadyAction.CREATE_TO_POSITION].
-@export_group("Rope Targets")
+@export_group("Rope Targets (Optional, Pick One)")
+## Specify the target end position for the [Rope2D], used when [method create]
+## is called or on [method _ready] if [member ready_action] is set to
+## [constant Rope2D.CREATE_TO_POSITION].
 @export var end_position_vector: Vector2
+## Specify the target end position for the [Rope2D], used when [method create]
+## is called or on [method _ready] if [member ready_action] is set to
+## [constant Rope2D.CREATE_TO_POSITION], and [member end_position_vector] is not set.[br]
+## [br]
+## Only [member Node2D.global_position] is used. Use [member ending_anchor_mount_point]
+## to control where the ending [RopeAnchor] is mounted in the tree.
 @export var end_position_node: Node2D
 
 
-@export_group("Mount Points")
-
+@export_group("Mount Points (Optional)")
 ## Specifies the node on the tree to mount newly created [RopePiece]
-## under, including [RopeAnchor] if neither [starting_anchor_mount_point]
-## or [ending_anchor_mount_point] are specified.
+## under, including [RopeAnchor] if neither [member starting_anchor_mount_point]
+## or [member ending_anchor_mount_point] are specified.[br]
 ## [br]
-## Defaults to a [Node] mounted under the [Rope2D].
+## Defaults to a newly created [Node] mounted under the [Rope2D].
 @export var rope_piece_mount_point: Node
 
+## Specifies the node on the tree to mount the starting [RopeAnchor]
+## under.[br]
+## [br]
+## Defaults to this [Rope2D] node.
 @export var starting_anchor_mount_point: Node
 
 ## Specify the node to mount the end-of-rope anchor under for the
 ## [Rope2D], used when [create()] is called or on [_ready] if
-## [ready_action] is set to [ReadyAction.CREATE_TO_MOUNT].
+## [ready_action] is set to [ReadyAction.CREATE_TO_MOUNT].[br]
+## [br]
+## Defaults to the resulting value of [member rope_piece_mount_point].
 @export var ending_anchor_mount_point: Node
 
+## Fired when a new [RopePiece] is created to allow for additional customization
+## at runtime.
 signal on_new_rope_piece(piece: RopePiece)
+## Fired when a new [RopeAnchor] (passed as a [RopePiece]) is created to allow for additional customization
+## at runtime.
 signal on_new_rope_anchor(anchor: RopePiece)
 
 # XXX:
+#  Rebuild test_rope using the new API
 #  Support negative values for spool and extend to withdraw elements smoothly.
 #  Set up a "launcher" test.
 #    * Fire a projectile and then extend the line out after it?
@@ -87,7 +124,7 @@ var _pending_spool_pieces: int = 0
 ## in the [method _init].start [RopeAnchor] used to create this [Rope2D].
 var piece_length: float:
 	get():
-		return _rope_start.piece_parameters.piece_length
+		return rope_piece_parameters.piece_length
 
 
 ## Pass in a RopeAnchor-contract conforming RopePiece as the first parameter.[br]
@@ -105,13 +142,15 @@ func _init() -> void:
 	# Populate the default parameters
 	if not rope_piece_parameters:
 		rope_piece_parameters = RopePieceParameters.new()
-	if not rope_anchor_parameters:
-		rope_anchor_parameters = RopeAnchorParameters.new()
-		rope_anchor_parameters.rope_piece_parameters = rope_piece_parameters
+	if not rope_starting_anchor_parameters:
+		rope_starting_anchor_parameters = RopePieceParameters.new()
+	if not rope_ending_anchor_parameters:
+		rope_ending_anchor_parameters = RopePieceParameters.new()
 
 
 func _ready():
-	_rope_start = _new_anchor(starting_anchor_mount_point)
+	await _guarantee_ready(starting_anchor_mount_point)
+	_rope_start = _new_anchor(starting_anchor_mount_point, rope_starting_anchor_parameters)
 	
 	if ready_action == ReadyAction.NOTHING:
 		return
@@ -128,8 +167,13 @@ func _ready():
 		if not validate_create_to_mount_configuration():
 			return
 		_rope_start.set_piece_rotation(_get_spawn_angle(_rope_start, ending_anchor_mount_point.global_position))
-		create_rope(_new_anchor(ending_anchor_mount_point))
+		await _guarantee_ready(ending_anchor_mount_point)
+		create_rope(_new_anchor(ending_anchor_mount_point, rope_ending_anchor_parameters))
 
+func _guarantee_ready(n: Node):
+	if not n.is_node_ready():
+		await n.ready
+	
 ## Without a valid position, or a Node2D whose global_position can be used,
 ## the CREATE_TO_POSITION setting isn't able to create the desired Rope2D.
 func validate_create_to_position_configuration() -> bool:
@@ -160,10 +204,10 @@ func _new_piece() -> RopePiece:
 	on_new_rope_piece.emit(piece)
 	return piece
 
-func _new_anchor(mount: Node) -> RopePiece:
+func _new_anchor(mount: Node, params: RopePieceParameters) -> RopePiece:
 	var anchor: RopePiece
 	if rope_type == RopeType.ROPE_TYPE_PINJOINT:
-		anchor = RopeAnchorPinJoint.create_anchor(mount, rope_anchor_parameters)
+		anchor = RopeAnchorPinJoint.create_anchor(mount, params)
 	#elif rope_type == RopeType.ROPE_TYPE_GROOVEPIN:
 	#	anchor = RopeAnchorGroovePin.create_anchor(self, rope_anchor_parameters)
 	else:
@@ -226,7 +270,7 @@ func create_rope(end_or_vec2: Variant, max_segments: int = -1, start_piece: Rope
 	var rope_end: RopePiece
 
 	if end_or_vec2 is Vector2 or floating_end:
-		rope_end = _create_anchor(ending_anchor_mount_point, _rope_last_piece, -1, spawn_angle)
+		rope_end = _create_ending_anchor(ending_anchor_mount_point, _rope_last_piece, -1, spawn_angle)
 		#rope_end.set_piece_position((_rope_last_piece.get_start_position() +
 		#	Vector2.from_angle(actual_angle).normalized() * piece_length ))
 
@@ -312,8 +356,8 @@ func _create_piece(prev_piece: RopePiece, _id: int, spawn_angle: float) -> RopeP
 
 	return piece
 
-func _create_anchor(mount: Node, prev_piece: RopePiece, _id: int, spawn_angle: float) -> RopePiece:
-	var piece := _new_anchor(mount)
+func _create_ending_anchor(mount: Node, prev_piece: RopePiece, _id: int, spawn_angle: float) -> RopePiece:
+	var piece := _new_anchor(mount, rope_ending_anchor_parameters)
 	
 	piece.set_piece_position(prev_piece.get_next_position())
 	piece.set_piece_rotation(spawn_angle)
@@ -338,7 +382,7 @@ func _spool_next_piece():
 	# print("spool from angle: ", start_angle, "(", rad_to_deg(start_angle), ") to angle: ", back_angle, "(", rad_to_deg(back_angle), ") shifting from: ", start.global_position, " to: ", new_position, " on vector: ", back_angle_vec)
 
 	# Create a new End Piece to act as a temporary anchor during physics
-	var new_start: RopePiece = _new_anchor(starting_anchor_mount_point)
+	var new_start: RopePiece = _new_anchor(starting_anchor_mount_point, rope_starting_anchor_parameters)
 	
 	# XXX this is a capsul here but a circle elsewhere.
 	new_start.set_piece_position(new_position)

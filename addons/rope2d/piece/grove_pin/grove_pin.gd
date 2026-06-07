@@ -86,8 +86,7 @@ func apply_piece_parameters(p: RopePieceParameters):
 	set_joint_parameters(p.pin_joint_bias, p.pin_joint_softness)
 	set_shape(p.shape, p.piece_length)
 
-func apply_anchor_parameters(p: RopeAnchorParameters):
-	
+func apply_anchor_parameters(p: RopePieceParameters):
 	pin_body.gravity_scale = p.gravity_scale
 	pin_body.mass = p.mass
 	groove_body.gravity_scale = p.gravity_scale

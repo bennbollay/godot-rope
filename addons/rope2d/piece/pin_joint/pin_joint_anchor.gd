@@ -15,19 +15,6 @@ extends RopePiecePinJoint
 ## constrained as the [RopePieceGroovePin] implementation.
 class_name RopeAnchorPinJoint
 
-@export var rope_piece_parameters: RopePieceParameters = RopePieceParameters.new()
-@export var rope_anchor_parameters: RopeAnchorParameters = RopeAnchorParameters.new()
-
-
-func _ready() -> void:
-	super()
-	var shape := CircleShape2D.new()
-	shape.radius = 10
-	rope_anchor_parameters.rope_piece_parameters.shape = shape
-	
-	piece_parameters = rope_piece_parameters
-	anchor_parameters = rope_anchor_parameters
-
 ## Prevent changing the shape of the anchor to the default CapsuleShape2D.
 func set_shape(shape: Shape2D, piece_length: float):
 	if shape is CapsuleShape2D:

@@ -13,40 +13,42 @@ class_name RopePieceParameters
 @export var push_rope: bool = false
 
 @export_group("RigidBody2D")
-## Overloads the [annotation RigidBody2D.gravity_scale].
+## Overloads [annotation RigidBody2D.gravity_scale].
 @export var gravity_scale: float = 0.0
-## Overloads the [annotation RigidBody2D.mass].
+## Overloads [annotation RigidBody2D.mass].
 @export var mass: float = 1.0
+## Overloads [annotation RigidBody2D.freeze].
+@export var freeze: bool = false
 
 @export_subgroup("Linear")
-## Specifies the linear_damp_mode for each joint.
+## Overloads [annotation RigidBody2D.linear_damp_mode].
 @export var linear_damp_mode: RigidBody2D.DampMode = RigidBody2D.DAMP_MODE_COMBINE
-## Specifies the linear_damp for each joint.
+## Overloads [annotation RigidBody2D.linear_damp].
 @export var linear_damp: float = 0.0
 
 @export_subgroup("Angular")
-## Specifies the angular_damp_mode for each joint.
+## Overloads [annotation RigidBody2D.angular_damp_mode].
 @export var angular_damp_mode: RigidBody2D.DampMode = RigidBody2D.DAMP_MODE_COMBINE
-## Specifies the angular_damp for each joint.
+## Overloads [annotation RigidBody2D.angular_damp].
 @export var angular_damp: float = 0.0
 
 @export_group("CollisionObject2D")
-## Specifies the collision_layer for each joint.
+## Overloads [annotation CollisionObject2D.collision_layer].
 @export_flags_2d_physics var collision_layer: int = 1 :
 	set(v):
 		collision_layer = v
 		validate()
 		
-## Specifies the collision_mask for each joint.
+## Overloads [annotation CollisionObject2D.collision_mask].
 @export_flags_2d_physics var collision_mask: int = 0x10 :
 	set(v):
 		collision_mask = v
 		validate()
 
 @export_group("Joint")
-## Overloads the [annotation PinJoint2D.softness].
+## Overloads [annotation PinJoint2D.softness].
 @export var pin_joint_softness: float = 0.2
-## Overloads the [annotation PinJoint2D.bias].
+## Overloads [annotation PinJoint2D.bias].
 @export var pin_joint_bias: float = 0.9
 ## Specifies the shape of the [CollisionShape2D] used in the [RopePiece].[br]
 ## [i](Default: [CapsuleShape2D])[/i]
@@ -56,7 +58,8 @@ var _param_list = [
 	"piece_length",
 	"push_rope",
 	"gravity_scale",
-	"mass: float",
+	"mass",
+	"freeze",
 	"linear_damp_mode",
 	"linear_damp",
 	"angular_damp_mode",

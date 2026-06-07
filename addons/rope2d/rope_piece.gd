@@ -18,13 +18,8 @@ var follow_mouse: bool = false
 ## The next [RopePiece] in the [Rope2D].
 var next_piece: RopePiece
 
-## Used in [RopeAnchor]-conforming types like [RopeAnchorPinJoint]
-## and [RopeAnchorGroovePin].
+## Defaults used to configure the underlying nodes and joints.
 var piece_parameters: RopePieceParameters
-
-## Used in [RopeAnchor]-conforming types like [RopeAnchorPinJoint]
-## and [RopeAnchorGroovePin].
-var anchor_parameters: RopeAnchorParameters
 
 
 signal on_relocation_done()
@@ -39,7 +34,6 @@ func _silence_editor_warnings():
 @abstract func get_relocation_path() -> String
 @abstract func add_relocation_force(force: Vector2)
 @abstract func apply_piece_parameters(parameters: RopePieceParameters)
-@abstract func apply_anchor_parameters(parameters: RopeAnchorParameters)
 ## The global_position the previous RopePiece attaches to.
 @abstract func get_prev_position() -> Vector2
 ## The global_position the next RopePiece starts at.

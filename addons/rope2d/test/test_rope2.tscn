@@ -1,15 +1,115 @@
 [gd_scene format=3 uid="uid://cin1bde63oowh"]
 
 [ext_resource type="Script" uid="uid://e4erd0bi0dy6" path="res://addons/rope2d/rope2d.gd" id="1_eovg1"]
+[ext_resource type="Script" uid="uid://bfxcw3p1krtyi" path="res://addons/rope2d/rope_piece_parameters.gd" id="2_fas15"]
+[ext_resource type="PackedScene" uid="uid://bf5jufm3igcse" path="res://addons/rope2d/wind_area2d.tscn" id="2_tbivd"]
+[ext_resource type="Script" uid="uid://bpvoluakbj2dg" path="res://addons/rope2d/rope_anchor_parameters.gd" id="3_ndgvf"]
+[ext_resource type="Script" uid="uid://cep2bvkhu72ic" path="res://addons/rope2d/test/mouse.gd" id="3_rwur8"]
+
+[sub_resource type="Resource" id="Resource_65p8s"]
+script = ExtResource("2_fas15")
+metadata/_custom_type_script = "uid://bfxcw3p1krtyi"
+
+[sub_resource type="Resource" id="Resource_l0y6s"]
+script = ExtResource("3_ndgvf")
+rope_piece_parameters = SubResource("Resource_65p8s")
+metadata/_custom_type_script = "uid://bpvoluakbj2dg"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rwur8"]
+size = Vector2(244, 1314.0417)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kelt8"]
+size = Vector2(244, 650)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_fas15"]
+radius = 50.0
 
 [node name="TestRope2" type="Node2D" unique_id=2086491870]
 
-[node name="Rope2D" type="Node2D" parent="." unique_id=717348956 node_paths=PackedStringArray("end_position_node")]
-position = Vector2(398.0005, 204.59985)
+[node name="Fixed on Both Ends" type="Label" parent="." unique_id=606895121]
+offset_left = 181.0
+offset_top = 61.0
+offset_right = 326.0
+offset_bottom = 84.0
+text = "fixed on both ends"
+
+[node name="Rope2D" type="Node2D" parent="Fixed on Both Ends" unique_id=717348956 node_paths=PackedStringArray("ending_anchor_mount_point")]
+position = Vector2(217.00049, 143.59985)
 script = ExtResource("1_eovg1")
-ready_action = 1
-end_position_node = NodePath("../Target")
+rope_starting_anchor_parameters = SubResource("Resource_l0y6s")
+ready_action = 2
+ending_anchor_mount_point = NodePath("../Target")
 metadata/_custom_type_script = "uid://e4erd0bi0dy6"
 
-[node name="Target" type="Node2D" parent="." unique_id=851591348]
-position = Vector2(1332.0005, 192.59985)
+[node name="Target" type="Node2D" parent="Fixed on Both Ends" unique_id=851591348]
+position = Vector2(1151.0005, 131.59985)
+
+[node name="Fixed and Floating" type="Label" parent="." unique_id=1520115512]
+offset_left = 244.0
+offset_top = 299.0
+offset_right = 389.0
+offset_bottom = 322.0
+text = "fixed on the front and floating on the end"
+
+[node name="Specific length" type="Label" parent="." unique_id=829112712]
+offset_left = 1525.0
+offset_top = 558.0
+offset_right = 1845.0
+offset_bottom = 581.0
+text = "creating a specific length"
+
+[node name="Spooling" type="Label" parent="." unique_id=579265488]
+offset_left = 537.0
+offset_top = 713.0
+offset_right = 857.0
+offset_bottom = 736.0
+text = "spooling (press down)
+draw line (press left or right)"
+
+[node name="Extending" type="Label" parent="." unique_id=2140674042]
+offset_left = 567.0
+offset_top = 913.0
+offset_right = 887.0
+offset_bottom = 962.0
+text = "extend  (press enter)"
+
+[node name="WindGenerator2" parent="." unique_id=303996806 instance=ExtResource("2_tbivd")]
+position = Vector2(580, 775)
+rotation = 1.5730299
+speed = Vector2(2, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WindGenerator2" unique_id=1177276476]
+position = Vector2(12.000244, -666.0203)
+shape = SubResource("RectangleShape2D_rwur8")
+
+[node name="Manually created" type="Label" parent="." unique_id=969861660]
+offset_left = 271.0
+offset_top = 459.0
+offset_right = 591.0
+offset_bottom = 482.0
+text = "manual"
+
+[node name="Wind Example" type="Label" parent="." unique_id=1498267135]
+offset_left = 511.0
+offset_top = 933.0
+offset_right = 831.0
+offset_bottom = 956.0
+text = "wind"
+
+[node name="WindGenerator" parent="." unique_id=1872967923 instance=ExtResource("2_tbivd")]
+position = Vector2(571, 1082)
+rotation = 1.5730299
+speed = Vector2(2, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WindGenerator" unique_id=1501518445]
+position = Vector2(12, -334)
+shape = SubResource("RectangleShape2D_kelt8")
+
+[node name="Mouse" type="StaticBody2D" parent="." unique_id=2114753636]
+unique_name_in_owner = true
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("3_rwur8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Mouse" unique_id=348353443]
+shape = SubResource("CircleShape2D_fas15")
