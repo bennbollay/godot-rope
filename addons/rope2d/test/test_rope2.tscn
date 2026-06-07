@@ -3,17 +3,22 @@
 [ext_resource type="Script" uid="uid://e4erd0bi0dy6" path="res://addons/rope2d/rope2d.gd" id="1_eovg1"]
 [ext_resource type="Script" uid="uid://bfxcw3p1krtyi" path="res://addons/rope2d/rope_piece_parameters.gd" id="2_fas15"]
 [ext_resource type="PackedScene" uid="uid://bf5jufm3igcse" path="res://addons/rope2d/wind_area2d.tscn" id="2_tbivd"]
-[ext_resource type="Script" uid="uid://bpvoluakbj2dg" path="res://addons/rope2d/rope_anchor_parameters.gd" id="3_ndgvf"]
 [ext_resource type="Script" uid="uid://cep2bvkhu72ic" path="res://addons/rope2d/test/mouse.gd" id="3_rwur8"]
 
-[sub_resource type="Resource" id="Resource_65p8s"]
+[sub_resource type="Resource" id="Resource_kelt8"]
 script = ExtResource("2_fas15")
+freeze = true
 metadata/_custom_type_script = "uid://bfxcw3p1krtyi"
 
-[sub_resource type="Resource" id="Resource_l0y6s"]
-script = ExtResource("3_ndgvf")
-rope_piece_parameters = SubResource("Resource_65p8s")
-metadata/_custom_type_script = "uid://bpvoluakbj2dg"
+[sub_resource type="Resource" id="Resource_fas15"]
+script = ExtResource("2_fas15")
+freeze = true
+metadata/_custom_type_script = "uid://bfxcw3p1krtyi"
+
+[sub_resource type="Resource" id="Resource_ndgvf"]
+script = ExtResource("2_fas15")
+freeze = true
+metadata/_custom_type_script = "uid://bfxcw3p1krtyi"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rwur8"]
 size = Vector2(244, 1314.0417)
@@ -27,29 +32,41 @@ radius = 50.0
 [node name="TestRope2" type="Node2D" unique_id=2086491870]
 
 [node name="Fixed on Both Ends" type="Label" parent="." unique_id=606895121]
-offset_left = 181.0
-offset_top = 61.0
-offset_right = 326.0
-offset_bottom = 84.0
+offset_left = 150.0
+offset_top = 50.0
+offset_right = 295.0
+offset_bottom = 73.0
 text = "fixed on both ends"
 
 [node name="Rope2D" type="Node2D" parent="Fixed on Both Ends" unique_id=717348956 node_paths=PackedStringArray("ending_anchor_mount_point")]
-position = Vector2(217.00049, 143.59985)
+position = Vector2(100, 100)
 script = ExtResource("1_eovg1")
-rope_starting_anchor_parameters = SubResource("Resource_l0y6s")
+rope_starting_anchor_parameters = SubResource("Resource_kelt8")
+rope_ending_anchor_parameters = SubResource("Resource_fas15")
 ready_action = 2
 ending_anchor_mount_point = NodePath("../Target")
 metadata/_custom_type_script = "uid://e4erd0bi0dy6"
 
 [node name="Target" type="Node2D" parent="Fixed on Both Ends" unique_id=851591348]
-position = Vector2(1151.0005, 131.59985)
+position = Vector2(1000, 100)
 
 [node name="Fixed and Floating" type="Label" parent="." unique_id=1520115512]
-offset_left = 244.0
-offset_top = 299.0
-offset_right = 389.0
-offset_bottom = 322.0
+offset_left = 150.0
+offset_top = 300.0
+offset_right = 470.0
+offset_bottom = 323.0
 text = "fixed on the front and floating on the end"
+
+[node name="Rope2D" type="Node2D" parent="Fixed and Floating" unique_id=1722305585 node_paths=PackedStringArray("end_position_node")]
+position = Vector2(100, 100)
+script = ExtResource("1_eovg1")
+rope_starting_anchor_parameters = SubResource("Resource_ndgvf")
+ready_action = 1
+end_position_node = NodePath("../Target")
+metadata/_custom_type_script = "uid://e4erd0bi0dy6"
+
+[node name="Target" type="Node2D" parent="Fixed and Floating" unique_id=1008100192]
+position = Vector2(1000, 100)
 
 [node name="Specific length" type="Label" parent="." unique_id=829112712]
 offset_left = 1525.0

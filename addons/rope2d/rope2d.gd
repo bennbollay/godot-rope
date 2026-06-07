@@ -88,18 +88,22 @@ const DEFAULT_LOCATION_TOLERANCE := 4.0
 @export var starting_anchor_mount_point: Node
 
 ## Specify the node to mount the end-of-rope anchor under for the
-## [Rope2D], used when [create()] is called or on [_ready] if
-## [ready_action] is set to [ReadyAction.CREATE_TO_MOUNT].[br]
+## [Rope2D], used when [method create_rope] is called or on [method _ready] if
+## [member ready_action] is set to [constant Rope2D.CREATE_TO_MOUNT].[br]
 ## [br]
 ## Defaults to the resulting value of [member rope_piece_mount_point].
 @export var ending_anchor_mount_point: Node
 
-## Fired when a new [RopePiece] is created to allow for additional customization
+## Emits when a new [RopePiece] is created to allow for additional customization
 ## at runtime.
 signal on_new_rope_piece(piece: RopePiece)
-## Fired when a new [RopeAnchor] (passed as a [RopePiece]) is created to allow for additional customization
+## Emits when a new [RopeAnchor] (passed as a [RopePiece]) is created to allow for additional customization
 ## at runtime.
 signal on_new_rope_anchor(anchor: RopePiece)
+## Emits when the rope is initially created via the [method create_rope] call or in [method _ready]
+## if [member ready_action] is set to [constant Rope2D.CREATE_TO_POSITION] or
+## [constant Rope2D.CREATE_TO_MOUNT].
+signal on_rope_create(rope: Rope2D)
 
 # XXX:
 #  Rebuild test_rope using the new API
@@ -284,6 +288,8 @@ func create_rope(end_or_vec2: Variant, max_segments: int = -1, start_piece: Rope
 	# Connect the last_piece to the end of the chain.
 	_rope_last_piece.set_next_piece(rope_end)
 
+	on_rope_create.emit(self)
+	
 	return rope_end
 
 ## Extend the length of the [Rope2D] in the direction of [param end_or_vec2]
@@ -379,14 +385,14 @@ func _spool_next_piece():
 	var start_position := _rope_start.get_prev_position()
 	var new_position := start_position + back_angle_vec * piece_length
 
-	# print("spool from angle: ", start_angle, "(", rad_to_deg(start_angle), ") to angle: ", back_angle, "(", rad_to_deg(back_angle), ") shifting from: ", start.global_position, " to: ", new_position, " on vector: ", back_angle_vec)
+	#print("spool from angle: ", start_angle, "(", rad_to_deg(start_angle), ") to angle: ", back_angle, "(", rad_to_deg(back_angle), ") shifting from: ", start.global_position, " to: ", new_position, " on vector: ", back_angle_vec)
 
 	# Create a new End Piece to act as a temporary anchor during physics
 	var new_start: RopePiece = _new_anchor(starting_anchor_mount_point, rope_starting_anchor_parameters)
 	
 	# XXX this is a capsul here but a circle elsewhere.
 	new_start.set_piece_position(new_position)
-	print(new_start, "Starting new position from ", _rope_start.global_position, "@", rad_to_deg(start_angle - PI / 2), " for ", piece_length, " = ", new_position)
+	#print(new_start, "Starting new position from ", _rope_start.global_position, "@", rad_to_deg(start_angle - PI / 2), " for ", piece_length, " = ", new_position)
 
 
 	# Create the new piece to insert into the rope

@@ -21,7 +21,6 @@ static func create_anchor(mount: Node, params: RopePieceParameters) -> RopePiece
 	return anchor
 
 func _ready() -> void:
-	print(self, ": _ready")
 	joint.node_a = get_path()
 
 
@@ -65,6 +64,7 @@ func apply_piece_parameters(p: RopePieceParameters):
 	var r: RigidBody2D = as_rigidbody()
 	r.gravity_scale = p.gravity_scale
 	r.mass = p.mass
+	r.freeze = p.freeze
 	r.linear_damp_mode = p.linear_damp_mode
 	r.linear_damp = p.linear_damp
 	r.angular_damp_mode = p.angular_damp_mode
