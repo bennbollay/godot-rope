@@ -23,7 +23,11 @@ static func create_anchor(mount: Node, params: RopePieceParameters) -> RopePiece
 func _ready() -> void:
 	joint.node_a = get_path()
 
-
+func rename(n: String):
+	name = n
+	joint.node_a = get_path()
+	
+	
 func get_angle_to_next() -> float:
 	var node_b := get_node(joint.node_b) as Node2D
 	return global_position.angle_to_point(node_b.global_position) - PI / 2

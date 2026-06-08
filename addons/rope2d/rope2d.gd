@@ -118,11 +118,12 @@ signal on_rope_create(rope: Rope2D)
 #  Set up a save/load test.
 
 var _rope_start: RopePiece
+var _rope_end: RopePiece
 var _rope_last_piece: RopePiece
-var _owned_rope_end: bool = false
 
 
 var _pending_spool_pieces: int = 0
+var _rope_spooling_anchor_parameters: RopePieceParameters = RopePieceParameters.new()
 
 ## Returns the [annotation RopePieceParameters.piece_length] value specified
 ## in the [method _init].start [RopeAnchor] used to create this [Rope2D].
@@ -172,7 +173,7 @@ func _ready():
 			return
 		_rope_start.set_piece_rotation(_get_spawn_angle(_rope_start, ending_anchor_mount_point.global_position))
 		await _guarantee_ready(ending_anchor_mount_point)
-		create_rope(_new_anchor(ending_anchor_mount_point, rope_ending_anchor_parameters))
+		create_rope(ending_anchor_mount_point.global_position)
 
 func _guarantee_ready(n: Node):
 	if not n.is_node_ready():
@@ -234,7 +235,7 @@ func _get_spawn_angle(start_piece: RopePiece = _rope_start, end_pos: Vector2 = _
 ## that indicates a target location for the [Rope2D] to finish within
 ## [member _close_tolerance].
 ## [br]
-## * [param end_or_vec2] - a [RopeAnchor] instantiated in the scene or a [Vector2]
+## * [param end_or_vec2] - a [Node2D] instantiated in the scene or a [Vector2]
 ##   specifying the target location for the [Rope2D] to finish.[br]
 ## [br]
 ## * [param max_segments] - the maximum number of segments, or [code]-1[/code] if no maximum,
@@ -243,60 +244,31 @@ func _get_spawn_angle(start_piece: RopePiece = _rope_start, end_pos: Vector2 = _
 ## [br]
 ## * [param start_piece] - extend the current rope from this [RopePiece], largely
 ##   used internally from [method extend].
-func create_rope(end_or_vec2: Variant, max_segments: int = -1, start_piece: RopePiece = _rope_start) -> RopePiece:
-	var end_pos: Vector2
-
-	if end_or_vec2 is Vector2i:
-		end_or_vec2 = Vector2(end_or_vec2.x, end_or_vec2.y)
-
-	if end_or_vec2 is Vector2:
-		end_pos = end_or_vec2
-	else:
-		end_pos = (end_or_vec2 as RopePiece).get_prev_position()
-
+func create_rope(target: Vector2, max_segments: int = -1, start_piece: RopePiece = _rope_start) -> RopePiece:
 	var start_pos: Vector2 = start_piece.get_next_position()
-	var distance := start_pos.distance_to(end_pos)
+	var distance := start_pos.distance_to(target)
 	var num_segments: int = ceil(distance / piece_length)
-	var spawn_angle: float = _get_spawn_angle(start_piece, end_pos)
-	var floating_end: bool = false
+	var spawn_angle: float = _get_spawn_angle(start_piece, target)
 
-	#print("XXX reducing num_segments by one")
-	#num_segments -= 1
-	#print(start_pos, "->", end_pos, "=", distance, " with ", num_segments, " * ", piece_length)
 	if max_segments != -1 and num_segments > max_segments:
-		floating_end = true
 		num_segments = max_segments
 
-	# Rotate the first piece
-	#start_piece.set_piece_rotation(spawn_angle)
-	_rope_last_piece = _create_rope_segments(start_piece, num_segments, spawn_angle, end_pos)
+	_rope_last_piece = _create_rope_segments(start_piece, num_segments, spawn_angle, target)
 
-	var rope_end: RopePiece
-
-	if end_or_vec2 is Vector2 or floating_end:
-		rope_end = _create_ending_anchor(ending_anchor_mount_point, _rope_last_piece, -1, spawn_angle)
-		#rope_end.set_piece_position((_rope_last_piece.get_start_position() +
-		#	Vector2.from_angle(actual_angle).normalized() * piece_length ))
-
-		_owned_rope_end = true
-	else:
-		rope_end = end_or_vec2
-		#rope_end.set_piece_position(_rope_last_piece.get_start_position())
-		#rope_end.set_piece_rotation(spawn_angle)
-
+	_rope_end = _create_ending_anchor(ending_anchor_mount_point, _rope_last_piece, -1, spawn_angle)
 
 	# Connect the last_piece to the end of the chain.
-	_rope_last_piece.set_next_piece(rope_end)
+	_rope_last_piece.set_next_piece(_rope_end)
 
 	on_rope_create.emit(self)
 	
-	return rope_end
+	return _rope_end
 
 ## Extend the length of the [Rope2D] in the direction of [param end_or_vec2]
 ## for a maximum [param max_segments], [code]-1[/code] means until the last [RopePiece]
 ## is within [member _close_tolerance] of [param end_or_vec2].[br]
 ## [br]
-## * [param end_or_vec2] - a [RopeAnchor] instantiated in the scene or a [Vector2]
+## * [param target] - a [Node2D] instantiated in the scene or a [Vector2]
 ##   specifying the target location for the [Rope2D] to finish.[br]
 ## [br]
 ## * [param max_segments] - the maximum number of segments, or [code]-1[/code] if no maximum,
@@ -308,12 +280,11 @@ func create_rope(end_or_vec2: Variant, max_segments: int = -1, start_piece: Rope
 ## [method extend] when there is a destination to reach, and use [method spool]
 ## when there's physics in effect on the rope pulling new [RopePiece]s out of
 ## the spool.[br]
-func extend(end_or_vec2: Variant, max_segments: int = -1) -> RopePiece:
-	if _owned_rope_end:
-		var rope_end: RopePiece = _rope_last_piece.next_piece
-		remove_child(rope_end)
-		_rope_last_piece.clear_next()
-	return create_rope(end_or_vec2, max_segments, _rope_last_piece)
+func extend(target: Vector2, max_segments: int = -1) -> RopePiece:
+	var rope_end: RopePiece = _rope_end
+	rope_end.queue_free()
+	_rope_last_piece.clear_next()
+	return create_rope(target, max_segments, _rope_last_piece)
 
 ## Add new [RopePiece] elements to a logical "spool" located at
 ## [member _rope_start].  As the [Rope2D] is pulled via physics, new
@@ -333,6 +304,8 @@ func spool(spool_pieces: int = 1):
 
 	# Already spooling in progress
 	if _pending_spool_pieces != spool_pieces:
+		# XXX Violates contract because it returns before
+		# the requested pieces have spooled.
 		return
 
 	while _pending_spool_pieces > 0:
@@ -385,12 +358,9 @@ func _spool_next_piece():
 	var start_position := _rope_start.get_prev_position()
 	var new_position := start_position + back_angle_vec * piece_length
 
-	#print("spool from angle: ", start_angle, "(", rad_to_deg(start_angle), ") to angle: ", back_angle, "(", rad_to_deg(back_angle), ") shifting from: ", start.global_position, " to: ", new_position, " on vector: ", back_angle_vec)
-
 	# Create a new End Piece to act as a temporary anchor during physics
-	var new_start: RopePiece = _new_anchor(starting_anchor_mount_point, rope_starting_anchor_parameters)
-	
-	# XXX this is a capsul here but a circle elsewhere.
+	var new_start: RopePiece = _new_anchor(starting_anchor_mount_point, _rope_spooling_anchor_parameters)
+	new_start.rename("SpoolAnchor")
 	new_start.set_piece_position(new_position)
 	#print(new_start, "Starting new position from ", _rope_start.global_position, "@", rad_to_deg(start_angle - PI / 2), " for ", piece_length, " = ", new_position)
 
@@ -436,11 +406,11 @@ func calculate_rope_length(from: RopePiece = _rope_start, to: RopePiece = _rope_
 ## each [RopePiece].[br]
 ## [br]
 ## Used when drawing a [Line2D] or other visual effect that follows the [Rope2D].
-func get_points() -> Array[Vector2]:
+func get_points(local: Vector2 = Vector2.ZERO) -> Array[Vector2]:
 	var points: Array[Vector2] = []
 	var walker: RopePiece = _rope_start.next_piece
 	while walker:
-		points.append(walker.global_position)
+		points.append(walker.global_position - local)
 		walker = walker.next_piece
 	return points
 
@@ -507,7 +477,6 @@ func from_json(saved_rope: Variant) -> RopePiece:
 	var rope_end_piece: RopePiece
 	rope_end_piece = _rope_start.clone(self)
 	rope_end_piece.set_piece_position(Utility.string_to_vector2(saved_rope.end_global_position))
-	_owned_rope_end = true
 
 	# Connect the last_piece to the end of the chain.
 	_rope_last_piece.set_next_piece(rope_end_piece)

@@ -39,8 +39,10 @@ func _silence_editor_warnings():
 ## The global_position the next RopePiece starts at.
 @abstract func get_next_position() -> Vector2
 
+var debug: bool = false
+
 func relocate_to(length: float, angle: float, target_anchor: RopePiece, force: float = 50):
-	#print(self, ": global_position ", global_position)
+	if debug: print(self, ": global_position ", global_position)
 	var groove := GrooveJoint2D.new()
 	add_child(groove)
 	groove.global_position = get_prev_position()
@@ -49,11 +51,11 @@ func relocate_to(length: float, angle: float, target_anchor: RopePiece, force: f
 	groove.initial_offset = 0
 	groove.length = length
 
-	#print("Groove joint:")
-	#print("  global_position: ", groove.global_position)
-	#print("  initial_offset : ", groove.initial_offset)
-	#print("  length         : ", groove.length)
-	#print("  rotation       : ", rad_to_deg(angle))
+	if debug: print("Groove joint:")
+	if debug: print("  global_position: ", groove.global_position)
+	if debug: print("  initial_offset : ", groove.initial_offset)
+	if debug: print("  length         : ", groove.length)
+	if debug: print("  rotation       : ", rad_to_deg(angle))
 
 
 	groove.rotate(angle)
@@ -65,17 +67,12 @@ func relocate_to(length: float, angle: float, target_anchor: RopePiece, force: f
 	# at 0.
 	groove.node_b = get_relocation_path()
 
-	#print("  node_a         : ", groove.node_a)
-	#print("  node_b         : ", groove.node_b)
+	if debug: print("  node_a         : ", groove.node_a)
+	if debug: print("  node_b         : ", groove.node_b)
 
 	_location_target = target_anchor.get_prev_position()
-	#print("  location_target: ", _location_target)
+	if debug: print("  location_target: ", _location_target)
 
-	# XXX NEXT:
-	#
-	# Log the parameters and locations between
-	# the old location and the new location so
-	# that the code change becomes more obvious.
 	if push_rope:
 		# XXX get_start_position might be wrong here
 		add_relocation_force((_location_target - get_prev_position()) * force)

@@ -1,9 +1,13 @@
 [gd_scene format=3 uid="uid://cin1bde63oowh"]
 
 [ext_resource type="Script" uid="uid://e4erd0bi0dy6" path="res://addons/rope2d/rope2d.gd" id="1_eovg1"]
+[ext_resource type="Script" uid="uid://c83mnv0tgcws7" path="res://addons/rope2d/test/draw_lines.gd" id="1_l0y6s"]
 [ext_resource type="Script" uid="uid://bfxcw3p1krtyi" path="res://addons/rope2d/rope_piece_parameters.gd" id="2_fas15"]
 [ext_resource type="PackedScene" uid="uid://bf5jufm3igcse" path="res://addons/rope2d/wind_area2d.tscn" id="2_tbivd"]
+[ext_resource type="Script" uid="uid://dg5fi6nnm2k2l" path="res://addons/rope2d/test/specific_length.gd" id="3_fas15"]
 [ext_resource type="Script" uid="uid://cep2bvkhu72ic" path="res://addons/rope2d/test/mouse.gd" id="3_rwur8"]
+[ext_resource type="Script" uid="uid://x1ysc006n3dx" path="res://addons/rope2d/test/spooling.gd" id="4_ndgvf"]
+[ext_resource type="Script" uid="uid://cujfol0q25pgs" path="res://addons/rope2d/test/extending.gd" id="6_65p8s"]
 
 [sub_resource type="Resource" id="Resource_kelt8"]
 script = ExtResource("2_fas15")
@@ -20,16 +24,35 @@ script = ExtResource("2_fas15")
 freeze = true
 metadata/_custom_type_script = "uid://bfxcw3p1krtyi"
 
+[sub_resource type="Resource" id="Resource_65p8s"]
+script = ExtResource("2_fas15")
+freeze = true
+metadata/_custom_type_script = "uid://bfxcw3p1krtyi"
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rwur8"]
-size = Vector2(244, 1314.0417)
+size = Vector2(75, 1200)
+
+[sub_resource type="Resource" id="Resource_l0y6s"]
+script = ExtResource("2_fas15")
+freeze = true
+metadata/_custom_type_script = "uid://bfxcw3p1krtyi"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kelt8"]
 size = Vector2(244, 650)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_fas15"]
-radius = 50.0
+radius = 20.0
 
 [node name="TestRope2" type="Node2D" unique_id=2086491870]
+
+[node name="Draw Lines" type="Label" parent="." unique_id=1181909267]
+offset_left = 815.0
+offset_top = 23.0
+offset_right = 1183.0
+offset_bottom = 68.0
+theme_override_font_sizes/font_size = 32
+text = "Press D to draw/undraw the lines"
+script = ExtResource("1_l0y6s")
 
 [node name="Fixed on Both Ends" type="Label" parent="." unique_id=606895121]
 offset_left = 150.0
@@ -52,9 +75,9 @@ position = Vector2(1000, 100)
 
 [node name="Fixed and Floating" type="Label" parent="." unique_id=1520115512]
 offset_left = 150.0
-offset_top = 300.0
+offset_top = 200.0
 offset_right = 470.0
-offset_bottom = 323.0
+offset_bottom = 223.0
 text = "fixed on the front and floating on the end"
 
 [node name="Rope2D" type="Node2D" parent="Fixed and Floating" unique_id=1722305585 node_paths=PackedStringArray("end_position_node")]
@@ -69,42 +92,64 @@ metadata/_custom_type_script = "uid://e4erd0bi0dy6"
 position = Vector2(1000, 100)
 
 [node name="Specific length" type="Label" parent="." unique_id=829112712]
-offset_left = 1525.0
-offset_top = 558.0
-offset_right = 1845.0
-offset_bottom = 581.0
+offset_left = 150.0
+offset_top = 350.0
+offset_right = 470.0
+offset_bottom = 373.0
 text = "creating a specific length"
+script = ExtResource("3_fas15")
+
+[node name="Rope2D" type="Node2D" parent="Specific length" unique_id=1974709726]
+position = Vector2(100, 100)
+script = ExtResource("1_eovg1")
+rope_starting_anchor_parameters = SubResource("Resource_65p8s")
+metadata/_custom_type_script = "uid://e4erd0bi0dy6"
+
+[node name="Target" type="Node2D" parent="Specific length" unique_id=181619441]
+position = Vector2(1000, 100)
 
 [node name="Spooling" type="Label" parent="." unique_id=579265488]
-offset_left = 537.0
-offset_top = 713.0
-offset_right = 857.0
-offset_bottom = 736.0
-text = "spooling (press down)
-draw line (press left or right)"
+offset_left = 150.0
+offset_top = 500.0
+offset_right = 470.0
+offset_bottom = 549.0
+text = "spooling (press down)"
+script = ExtResource("4_ndgvf")
 
-[node name="Extending" type="Label" parent="." unique_id=2140674042]
-offset_left = 567.0
-offset_top = 913.0
-offset_right = 887.0
-offset_bottom = 962.0
-text = "extend  (press enter)"
+[node name="Rope2D" type="Node2D" parent="Spooling" unique_id=64463343]
+position = Vector2(100, 100)
+script = ExtResource("1_eovg1")
+rope_starting_anchor_parameters = SubResource("Resource_65p8s")
+metadata/_custom_type_script = "uid://e4erd0bi0dy6"
 
-[node name="WindGenerator2" parent="." unique_id=303996806 instance=ExtResource("2_tbivd")]
-position = Vector2(580, 775)
+[node name="Target" type="Node2D" parent="Spooling" unique_id=458715757]
+position = Vector2(1000, 100)
+
+[node name="WindArea2D" parent="Spooling" unique_id=303996806 instance=ExtResource("2_tbivd")]
+position = Vector2(0, 100)
 rotation = 1.5730299
 speed = Vector2(2, 0)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="WindGenerator2" unique_id=1177276476]
-position = Vector2(12.000244, -666.0203)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Spooling/WindArea2D" unique_id=1177276476]
+position = Vector2(0, -600)
 shape = SubResource("RectangleShape2D_rwur8")
 
-[node name="Manually created" type="Label" parent="." unique_id=969861660]
-offset_left = 271.0
-offset_top = 459.0
-offset_right = 591.0
-offset_bottom = 482.0
-text = "manual"
+[node name="Extending" type="Label" parent="." unique_id=2140674042]
+offset_left = 150.0
+offset_top = 650.0
+offset_right = 470.0
+offset_bottom = 673.0
+text = "extend  (press enter)"
+script = ExtResource("6_65p8s")
+
+[node name="Rope2D" type="Node2D" parent="Extending" unique_id=907853778]
+position = Vector2(100, 100)
+script = ExtResource("1_eovg1")
+rope_starting_anchor_parameters = SubResource("Resource_l0y6s")
+metadata/_custom_type_script = "uid://e4erd0bi0dy6"
+
+[node name="Target" type="Node2D" parent="Extending" unique_id=1173355057]
+position = Vector2(1000, 100)
 
 [node name="Wind Example" type="Label" parent="." unique_id=1498267135]
 offset_left = 511.0

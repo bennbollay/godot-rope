@@ -64,4 +64,5 @@ func _process(_delta: float) -> void:
 	if not rope:
 		return
 
-	points = rope.get_points()
+	#print(rope.get_points())
+	points = rope.get_points(global_position)
