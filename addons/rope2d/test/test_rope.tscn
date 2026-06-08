@@ -37,9 +37,6 @@ script = ExtResource("3_enyik")
 freeze = true
 metadata/_custom_type_script = "uid://bfxcw3p1krtyi"
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_kelt8"]
-size = Vector2(244, 650)
-
 [sub_resource type="CircleShape2D" id="CircleShape2D_fas15"]
 radius = 20.0
 
@@ -150,22 +147,6 @@ metadata/_custom_type_script = "uid://e4erd0bi0dy6"
 
 [node name="Target" type="Node2D" parent="Extending" unique_id=1173355057]
 position = Vector2(1000, 100)
-
-[node name="Wind Example" type="Label" parent="." unique_id=1498267135]
-offset_left = 511.0
-offset_top = 933.0
-offset_right = 831.0
-offset_bottom = 956.0
-text = "wind"
-
-[node name="WindGenerator" parent="." unique_id=1872967923 instance=ExtResource("4_x7q8p")]
-position = Vector2(571, 1082)
-rotation = 1.5730299
-speed = Vector2(2, 0)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="WindGenerator" unique_id=1501518445]
-position = Vector2(12, -334)
-shape = SubResource("RectangleShape2D_kelt8")
 
 [node name="Mouse" type="StaticBody2D" parent="." unique_id=2114753636]
 unique_name_in_owner = true
