@@ -1,6 +1,6 @@
 extends RopePieceGroovePin
 
-## A [RopeAnchor] for a [GroveJoint2D]-based [RopePiece].  This alternative design
+## An anchor for a [GroveJoint2D]-based [RopePiece].  This alternative design
 ## is suitable for environments where higher physics accuracy and a more constrained
 ## length is desired.[br]
 ## [br]
@@ -28,7 +28,7 @@ func create_piece(mount: Node) -> RopePieceGroovePin:
 	return RopePieceGroovePin.create(mount, piece_parameters)
 
 
-func create_anchor(mount: Node) -> RopeAnchor:
+func create_anchor(mount: Node) -> RopePiece:
 	var anchor: RopePiece = load("uid://dmvf0nq7q74ns").instantiate()
 	mount.add_child(anchor)
 	piece_parameters.apply(anchor)

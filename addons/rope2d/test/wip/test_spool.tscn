@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://cgp5dgc4fivyp"]
 
 [ext_resource type="PackedScene" uid="uid://bhof88x0fym2i" path="res://addons/rope2d/piece/pin_joint/pin_joint_anchor.tscn" id="1_krpve"]
-[ext_resource type="Script" uid="uid://chtedi4f8hbad" path="res://addons/rope2d/test/test_spool.gd" id="1_pcryp"]
+[ext_resource type="Script" uid="uid://chtedi4f8hbad" path="res://addons/rope2d/test/wip/test_spool.gd" id="1_pcryp"]
 [ext_resource type="Script" uid="uid://bfxcw3p1krtyi" path="res://addons/rope2d/rope_piece_parameters.gd" id="3_rxuln"]
-[ext_resource type="Script" uid="uid://bpvoluakbj2dg" path="res://addons/rope2d/rope_anchor_parameters.gd" id="4_yxfuh"]
+[ext_resource type="Script" path="res://addons/rope2d/rope_anchor_parameters.gd" id="4_yxfuh"]
 
 [sub_resource type="Resource" id="Resource_2imph"]
 script = ExtResource("3_rxuln")

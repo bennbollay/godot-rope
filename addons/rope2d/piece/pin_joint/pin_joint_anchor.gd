@@ -1,7 +1,7 @@
 @icon("res://addons/rope2d/icon/logout-svgrepo-com.svg")
 extends RopePiecePinJoint
 
-## A [RopeAnchor] for a [PinJoint2D]-based [RopePiece].  These are suitable for
+## An anchor for a [PinJoint2D]-based [RopePiece].  These are suitable for
 ## most simple rope usage like vines, mostly static cables, and other
 ## instances where the physics interactions are limited and tolereance around
 ## length changes and movement are high.[br]

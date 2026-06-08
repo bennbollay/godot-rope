@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://dxi8tq6bacoy0"]
 
 [ext_resource type="PackedScene" uid="uid://dmvf0nq7q74ns" path="res://addons/rope2d/piece/grove_pin/groove_pin_anchor.tscn" id="1_ccm1c"]
-[ext_resource type="Script" uid="uid://2r3373i47ibo" path="res://addons/rope2d/test/test_rope_bases.gd" id="1_fegm7"]
+[ext_resource type="Script" uid="uid://2r3373i47ibo" path="res://addons/rope2d/test/wip/test_rope_bases.gd" id="1_fegm7"]
 [ext_resource type="PackedScene" uid="uid://bhof88x0fym2i" path="res://addons/rope2d/piece/pin_joint/pin_joint_anchor.tscn" id="2_fegm7"]
 [ext_resource type="Script" uid="uid://bfxcw3p1krtyi" path="res://addons/rope2d/rope_piece_parameters.gd" id="4_jll84"]
 
