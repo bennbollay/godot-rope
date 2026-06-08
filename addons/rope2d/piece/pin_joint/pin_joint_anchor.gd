@@ -1,3 +1,4 @@
+@icon("res://addons/rope2d/icon/logout-svgrepo-com.svg")
 extends RopePiecePinJoint
 
 ## A [RopeAnchor] for a [PinJoint2D]-based [RopePiece].  These are suitable for

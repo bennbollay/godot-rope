@@ -5,6 +5,9 @@ func remove_drawers():
 	for drawer in drawers:
 		drawer.queue_free()
 	drawers.clear()
+	
+	get_tree().debug_collisions_hint = true
+	get_tree().root.propagate_call("queue_redraw")
 
 func add_drawers():
 	var ropes: Array = get_parent().find_children("Rope2D")
@@ -12,6 +15,10 @@ func add_drawers():
 		var drawer := RopeDrawSimpleLine.new(rope)
 		rope.add_child(drawer)
 		drawers.push_back(drawer)
+
+	get_tree().debug_collisions_hint = false
+	get_tree().root.propagate_call("queue_redraw")
+	
 
 var gate := NoFasterThan.new()
 func _process(delta: float) -> void:

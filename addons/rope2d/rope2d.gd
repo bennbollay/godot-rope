@@ -1,3 +1,4 @@
+@icon("res://addons/rope2d/icon/plenticons-chain-yellow.svg")
 extends Node2D
 
 class_name Rope2D

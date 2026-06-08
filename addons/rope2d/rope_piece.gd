@@ -1,3 +1,4 @@
+@icon("res://addons/rope2d/icon/link-minimalistic-svgrepo-com.svg")
 @abstract
 extends Node2D
 
