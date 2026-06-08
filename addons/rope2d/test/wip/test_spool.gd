@@ -15,15 +15,3 @@ func _process(delta: float) -> void:
 		print("Growing rope")
 		rope.spool(1)
 		# rope.freeze_rope()
-
-# XXX Okay this seems to work - return back to the main
-#     tests and see what's going on there.  At the very
-#     least, focus on pinjoint and further basic
-#     parameterization there to simplify usage.
-#
-#     It'd be very nice if it'd be possible to specify
-#     the anchors and stuff entirely in the inspector
-#     so that it can be easily swapped around.
-#
-#     And then support negative spool() and extend()
-#     to reduce the length of ropes.

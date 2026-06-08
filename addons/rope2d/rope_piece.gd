@@ -2,16 +2,17 @@
 @abstract
 extends Node2D
 
-## The abstract base class that various different types of [RopePiece] are
-## derived from.
+## The abstract base class that various different types of [RopePiece], such as
+## [PinJointRopePiece], are derived from.
 class_name RopePiece
 
 ## Force added from a [WindArea2D] on this [RopePiece].
 var wind_velocity: Vector2 = Vector2(0, 0)
-var _location_target: Vector2 = Vector2.INF
 
 ## Forcefully push this piece onto the rope when unspooling.
 var push_rope: bool = false
+var push_rope_force: float = 50.0
+var _location_target: Vector2 = Vector2.INF
 
 ## Push this piece towards the current [annotation CanvasItem.get_global_mouse_position].
 var follow_mouse: bool = false
@@ -23,41 +24,54 @@ var next_piece: RopePiece
 var piece_parameters: RopePieceParameters
 
 
+## Internal signal used when this piece has been fully added to the [Rope2D].
 signal on_relocation_done()
 
 
 func _silence_editor_warnings():
 	on_relocation_done.get_name()
 
+## Get the angle to the next piece.
 @abstract func get_angle_to_next() -> float
-@abstract func set_shape(shape: CapsuleShape2D, piece_length: float)
+
+## Set the shape of the collision shape, as well as the length.
+@abstract func set_shape(shape: Shape2D, piece_length: float)
+
+## Update the joint's bias and softness parameters.
 @abstract func set_joint_parameters(bias: float, softness: float)
+
+## Used during spooling to control which part of the [RopePiece] the [GrooveJoint2D]
+## attaches to.
 @abstract func get_relocation_path() -> String
+
+## Force added to accelerate the unspooling of this piece.
 @abstract func add_relocation_force(force: Vector2)
+
+## On creation, apply the parameters specified in [annotation Rope2D.rope_piece_parameters]
+## or related anchor specializations.
 @abstract func apply_piece_parameters(parameters: RopePieceParameters)
+
 ## The global_position the previous RopePiece attaches to.
 @abstract func get_prev_position() -> Vector2
 ## The global_position the next RopePiece starts at.
 @abstract func get_next_position() -> Vector2
 
-var debug: bool = false
+## Diagnostic flag to add more logging messages.
+var debug: bool = true
 
-func relocate_to(length: float, angle: float, target_anchor: RopePiece, force: float = 50):
-	if debug: print(self, ": global_position ", global_position)
+## Used by [method Rope2D.spool] to relocate a given piece to the current start position.
+func relocate_to(length: float, angle: float, target_anchor: RopePiece, force: float = push_rope_force, new_position: Vector2 = target_anchor.get_prev_position()):
 	var groove := GrooveJoint2D.new()
 	add_child(groove)
 	groove.global_position = get_prev_position()
 	# node_b (this node) will go from the current position (initial_offset=0)
 	# to node_a's position at length distance.
-	groove.initial_offset = 0
-	groove.length = length
-
-	if debug: print("Groove joint:")
-	if debug: print("  global_position: ", groove.global_position)
-	if debug: print("  initial_offset : ", groove.initial_offset)
-	if debug: print("  length         : ", groove.length)
-	if debug: print("  rotation       : ", rad_to_deg(angle))
-
+	if length > 0:
+		groove.initial_offset = 0
+		groove.length = length
+	else:
+		groove.initial_offset = -length
+		groove.length = -length
 
 	groove.rotate(angle)
 	
@@ -68,29 +82,31 @@ func relocate_to(length: float, angle: float, target_anchor: RopePiece, force: f
 	# at 0.
 	groove.node_b = get_relocation_path()
 
-	if debug: print("  node_a         : ", groove.node_a)
-	if debug: print("  node_b         : ", groove.node_b)
+	_location_target = new_position
 
-	_location_target = target_anchor.get_prev_position()
-	if debug: print("  location_target: ", _location_target)
-
-	if push_rope:
+	if push_rope or length < 0:
 		# XXX get_start_position might be wrong here
 		add_relocation_force((_location_target - get_prev_position()) * force)
+		
 	await on_relocation_done
 
+
+## Updates the [RopePiece] to point at the next one in the rope.
 func set_next_piece(next: RopePiece):
 	next_piece = next
 
-
+## Remove the references to the next [RopePiece] from this one.
 func clear_next():
 	next_piece = null
 
+## Update the global position, which may require customization of sub-elements.
 func set_piece_position(pos: Vector2):
 	global_position = pos
 
+## Rotate the piece so that it's aligned with the rest of the rope on creation.
 func set_piece_rotation(rot: float):
 	rotation = rot
 
+## Hide the current piece if it's not part of the active rope.
 func set_piece_visible(vis: bool):
 	visible = vis

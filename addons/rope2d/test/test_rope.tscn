@@ -110,7 +110,7 @@ offset_left = 150.0
 offset_top = 500.0
 offset_right = 470.0
 offset_bottom = 549.0
-text = "spooling (press down)"
+text = "spooling (press down or up)"
 script = ExtResource("5_a0dvm")
 
 [node name="Rope2D" type="Node2D" parent="Spooling" unique_id=64463343]

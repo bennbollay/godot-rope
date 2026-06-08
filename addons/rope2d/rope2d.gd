@@ -111,6 +111,11 @@ signal on_rope_create(rope: Rope2D)
 
 # XXX:
 #  Support negative values for spool and extend to withdraw elements smoothly.
+#    Splice to create two Rope's from one.
+#    Delete to remove a Rope and clean up after itself
+#    Smooth extend() that tween's towards the target for the last pieces.
+#  Add test case for [code]push_force[/code]
+#  Resolve contract violation of `spool` not returning after spool is complete.
 #  Set up a "launcher" test.
 #    * Fire a projectile and then extend the line out after it?
 #    -- This is actually a pretty good idea, doing the same "extend" that
@@ -126,6 +131,8 @@ var _rope_last_piece: RopePiece
 
 var _pending_spool_pieces: int = 0
 var _rope_spooling_anchor_parameters: RopePieceParameters = RopePieceParameters.new()
+var _spool_lock: float = 0
+signal _on_spool_release()
 
 ## Returns the [annotation RopePieceParameters.piece_length] value.
 var piece_length: float:
@@ -238,8 +245,9 @@ func _get_spawn_angle(start_piece: RopePiece = _rope_start, end_pos: Vector2 = _
 	return spawn_angle
 
 
-## Create [RopePiece] elements between the Rope2D and [param target].
+## Create [RopePiece] elements between the Rope2D and [param target].[br]
 ## [br]
+## [b]Parameters:[/b][br][br]
 ## * [param target] - a [Vector2]
 ##   specifying the target location for the [Rope2D] to finish.[br]
 ## [br]
@@ -273,52 +281,77 @@ func create_rope(target: Vector2, max_segments: int = -1, start_piece: RopePiece
 ## for a maximum [param max_segments], [code]-1[/code] means until the last [RopePiece]
 ## is within [member _close_tolerance] of [param target].[br]
 ## [br]
+## [b]Note:[/b] [method extend] extends the [Rope2D] from the [i]end[/i] of the rope, while
+## [method spool] extends the [Rope2D] from the [i]start[/i] of the rope.  Use
+## [method extend] when there is a destination to reach, and use [method spool]
+## when there's physics in effect on the rope pulling new [RopePiece]s out of
+## the spool.
+## [br]
+## [b]Parameters:[/b][br][br]
 ## * [param target] - a [Vector2]
 ##   specifying the target location for the [Rope2D] to finish.[br]
 ## [br]
 ## * [param max_segments] - the maximum number of segments, or [code]-1[/code] if no maximum,
 ##   to use when extending towards [param target].  Useful when specifying
 ##   a [Rope2D] of fixed length.[br]
-## [br]
-## [b]Note:[/b] [method extend] extends the [Rope2D] from the [i]end[/i] of the rope, while
-## [method spool] extends the [Rope2D] from the [i]start[/i] of the rope.  Use
-## [method extend] when there is a destination to reach, and use [method spool]
-## when there's physics in effect on the rope pulling new [RopePiece]s out of
-## the spool.
 func extend(target: Vector2, max_segments: int = -1) -> RopePiece:
 	_rope_end.queue_free()
 	_rope_last_piece.clear_next()
 	return create_rope(target, max_segments, _rope_last_piece)
 
-## Add [param spool_pieces] of [RopePiece] elements to a logical "spool" located at
-## [member _rope_start].  As the [Rope2D] is pulled via physics, new
-## pieces will be spooled out until [param spool_pieces] have been added
-## to the rope.  Each [RopePiece] will be [member piece_length] in size.[br]
+## Add (or remove, if negative) [param spool_pieces] of [RopePiece] elements to
+## a logical "spool" located at [member _rope_start].  As the [Rope2D] is
+## pulled via physics, new pieces will be spooled out until
+## [param spool_pieces] have been added to the rope.  Each [RopePiece] will be
+## [member piece_length] in size.[br]
+## [br]
+## If [param spool_pieces] is negative, then pieces are pulled back into the spool
+## using the force value specified in
+## [annotation RopePieceParameters.push_rope_force].[br]
+## [br]
+## If [param spool_pieces] is positive, then pieces are extruded at a rate commesurate
+## with the force being exerted on the [Rope2D], as from a [WindArea2D] or gravity.
+## Additionally, if [annotation RopePieceParmaeters.push_rope] is set to true, then
+## [annotation RopePieceParameters.push_rope_force] will be added to whatever other
+## forces are applied against the rope.[br]
 ## [br]
 ## [b]Warning:[/b] Spool is not a particularly fast implementation, so alternative
 ## approaches may be necessary if a large number of pieces need to be spooled out
-## rapidly.
-## [br]
-## * [param spool_pieces] - the number of new [RopePiece] to add to the
-##   [Rope2D].[br]
+## rapidly.[br]
 ## [br]
 ## [b]Note:[/b] [method extend] extends the [Rope2D] from the [i]end[/i] of the rope, while
 ## [method spool] extends the [Rope2D] from the [i]start[/i] of the rope.  Use
 ## [method extend] when there is a destination to reach, and use [method spool]
 ## when there's physics in effect on the rope pulling new [RopePiece]s out of
 ## the spool.[br]
-func spool(spool_pieces: int = 1):
+## [br]
+## [b]Note:[/b] Invoking [code]await spool()[/code] will wait until all pending [method spool]
+## invocations have completed, including the current one.
+## [b]Parameters:[/b][br][br]
+## - [param spool_pieces] - the number of new [RopePiece] to add to the
+##   [Rope2D].[br]
+func spool(spool_pieces: int = 1, lock = randf()):
 	_pending_spool_pieces += spool_pieces
 
-	# Already spooling in progress
-	if _pending_spool_pieces != spool_pieces:
-		# XXX Violates contract because it returns before
-		# the requested pieces have spooled.
+	if _spool_lock == 0:
+		# Lock spooling to this invocation
+		_spool_lock = lock
+	else:
+		# Spooling already in progress
+		await _on_spool_release
 		return
-
-	while _pending_spool_pieces > 0:
-		await _spool_next_piece()
-		_pending_spool_pieces -= 1
+		
+	while _pending_spool_pieces != 0:
+		if _pending_spool_pieces > 0:
+			await _spool_next_piece()
+			_pending_spool_pieces -= 1
+		if _pending_spool_pieces < 0:
+			await _unspool_next_piece()
+			_pending_spool_pieces += 1
+	
+	# Release the lock
+	_spool_lock = 0
+	_on_spool_release.emit()
 
 
 
@@ -358,7 +391,8 @@ func _spool_next_piece():
 	var old_first_piece := _rope_start.next_piece
 
 	# Determine the direction of the first piece in the rope
-	# XXX Why double-next here?
+	# XXX Why double-next here? Add check for minimum length if this is
+	#     actually required.
 	var start_angle := _rope_start.next_piece.next_piece.get_angle_to_next()
 	var back_angle_vec := Vector2.from_angle(start_angle - PI / 2)
 
@@ -380,7 +414,7 @@ func _spool_next_piece():
 	new_piece.set_next_piece(old_first_piece)
 
 	_rope_start.clear_next()
-	# Decouple _rope_start's joint but keep next_piece valid
+	# Decouple _rope_start's joint but keep next_piece valid, used for collecting points.
 	_rope_start.next_piece = new_piece
 	_rope_start.set_piece_visible(false)
 
@@ -394,9 +428,51 @@ func _spool_next_piece():
 	new_start.queue_free()
 	_rope_start.set_piece_visible(true)
 
+func _unspool_next_piece():
+	var old_first_piece := _rope_start.next_piece
+
+	# Determine the direction of the first piece in the rope
+	# XXX Why double-next here? Add check for minimum length if this is
+	#     actually required.
+	var start_angle := _rope_start.next_piece.next_piece.get_angle_to_next()
+	var back_angle_vec := Vector2.from_angle(start_angle - PI / 2)
+
+	# Find the position behind the current starting position
+	var start_position := _rope_start.get_prev_position()
+	var new_position := start_position + back_angle_vec * piece_length
+
+	# Create a new End Piece to act as a temporary anchor during physics
+	var new_start: RopePiece = _new_anchor(starting_anchor_mount_point, _rope_spooling_anchor_parameters)
+	new_start.rename("SpoolAnchor")
+	new_start.set_piece_position(_rope_start.get_prev_position())
+	#print(new_start, "Starting new position from ", _rope_start.global_position, "@", rad_to_deg(start_angle - PI / 2), " for ", piece_length, " = ", new_position)
+
+
+	# Connect the old first piece after the new piece
+	new_start.set_next_piece(old_first_piece)
+
+	_rope_start.clear_next()
+	# Decouple _rope_start's joint but keep next_piece valid, used for collecting points.
+	_rope_start.next_piece = old_first_piece
+	_rope_start.set_piece_visible(false)
+
+	# Now set up the force to unspool it:
+	# await new_start.relocate_to(start_position)
+	await new_start.relocate_to(-piece_length, start_angle, _rope_start, rope_piece_parameters.push_rope_force, new_position)
+	_rope_start.set_next_piece(old_first_piece.next_piece)
+	old_first_piece.clear_next()
+	
+	new_start.queue_free()
+	old_first_piece.queue_free()
+	_rope_start.set_piece_visible(true)
+
 
 ## Returns the length of the [RopePiece]s between [param from] and [param to], or
-## the entire [Rope2D] if unspecified.
+## the entire [Rope2D] if unspecified.[br]
+## [br]
+## [b]Parameters:[/b][br][br]
+## * [param from] - The [RopePiece] to start counting at.[br][br]
+## * [param to] - The [RopePiece] to finish counting at.
 func calculate_rope_length(from: RopePiece = _rope_start, to: RopePiece = _rope_last_piece) -> float:
 	var walker: RopePiece = from
 	var dist: float = 0.0
@@ -414,16 +490,23 @@ func calculate_rope_length(from: RopePiece = _rope_start, to: RopePiece = _rope_
 ## each [RopePiece], with [param local] removed from each one.[br]
 ## [br]
 ## Used when drawing a [Line2D] or other visual effect that follows the [Rope2D].
+## [br]
+## [b]Parameters:[/b][br][br]
+## * [param local] - A coordinate translation to transpose the points into a common
+##   coordinate space, such as [member Node2D.global_position]
 func get_points(local: Vector2 = Vector2.ZERO) -> Array[Vector2]:
-	var points: Array[Vector2] = []
 	var walker: RopePiece = _rope_start.next_piece
+	if _pending_spool_pieces != 0:
+		# Skip the first piece which is still being unspooled.
+		walker = walker.next_piece
+	var points: Array[Vector2] = [_rope_start.global_position - local]
 	while walker:
 		points.append(walker.global_position - local)
 		walker = walker.next_piece
 	return points
 
-## Freeze all of the physics in the Rope, extremely useful when debugging. An `unfreeze_rope`
-## is left as an exercise for the reader.
+## Freeze all of the physics in the Rope, extremely useful when debugging. An
+## [code]unfreeze_rope()[/code] is left as an exercise for the reader.
 func freeze_rope():
 	_freeze_nodes(self)
 	_freeze_nodes(_rope_start)
@@ -468,7 +551,6 @@ func to_json() -> Dictionary:
 ## [br]
 ## * [param saved_rope] - the [Dictionary] returned from [method to_json].
 static func create_saved_rope(start: RopePiece, saved_rope: Variant) -> Rope2D:
-	# XXX Broken
 	return Rope2D.new()
 
 ## [b]Unsupported[/b][br][br]

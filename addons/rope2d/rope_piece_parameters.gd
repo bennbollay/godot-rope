@@ -11,6 +11,9 @@ class_name RopePieceParameters
 ## the [annotation Rope2D.spool] versus letting it be
 ## unspooled as normal physics pull on the rope.
 @export var push_rope: bool = false
+## Force to use when adding (if [member push_rope] is set to `TRUE`) or
+## removing [RopePiece] via [annotation Rope2D.spool].
+@export var push_rope_force: float = 50.0
 
 @export_group("RigidBody2D")
 ## Overloads [annotation RigidBody2D.gravity_scale].
@@ -33,13 +36,17 @@ class_name RopePieceParameters
 @export var angular_damp: float = 0.0
 
 @export_group("CollisionObject2D")
-## Overloads [annotation CollisionObject2D.collision_layer].
+## Overloads [annotation CollisionObject2D.collision_layer].[br]
+## [br]
+## [b]Note:[/b] Do not have the [member collision_layer] and [member collision_mask] overlap.
 @export_flags_2d_physics var collision_layer: int = 1 :
 	set(v):
 		collision_layer = v
 		validate()
 		
-## Overloads [annotation CollisionObject2D.collision_mask].
+## Overloads [annotation CollisionObject2D.collision_mask].[br]
+## [br]
+## [b]Note:[/b] Do not have the [member collision_layer] and [member collision_mask] overlap.
 @export_flags_2d_physics var collision_mask: int = 0x10 :
 	set(v):
 		collision_mask = v
@@ -57,6 +64,7 @@ class_name RopePieceParameters
 var _param_list = [
 	"piece_length",
 	"push_rope",
+	"push_rope_force",
 	"gravity_scale",
 	"mass",
 	"freeze",
@@ -71,7 +79,6 @@ var _param_list = [
 ]
 
 func _init():
-	shape = CapsuleShape2D.new()
 	shape.height = piece_length
 	shape.radius = 1.0
 	validate()

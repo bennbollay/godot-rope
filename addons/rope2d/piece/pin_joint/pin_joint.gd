@@ -77,6 +77,7 @@ func apply_piece_parameters(p: RopePieceParameters):
 	r.collision_mask = p.collision_mask
 	
 	push_rope = p.push_rope
+	push_rope_force = p.push_rope_force
 	
 	set_joint_parameters(p.pin_joint_bias, p.pin_joint_softness)
 	set_shape(p.shape, p.piece_length)
