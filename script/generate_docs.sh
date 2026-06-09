@@ -13,7 +13,7 @@ rm -rf ${DOC_DIR}
 echo Generating...
 ${GODOT_BIN} --doctool ./${DOC_DIR} --gdscript-docs .
 
-TEST_FILES=$(find doc_classes -name "test*")
+TEST_FILES=$(find doc_classes -name "*test*" -or -name "NoFasterThan.xml")
 echo Removing test classes: ${TEST_FILES}
 for i in ${TEST_FILES}; do
 	rm $i

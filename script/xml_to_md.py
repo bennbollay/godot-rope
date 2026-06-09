@@ -124,7 +124,7 @@ def bbcode_to_markdown(text) -> str:
 
 
 def group_to_doclink(match: re.Match) -> str:
-    if len(match.groups()) > 2:
+    if len(match.groups()) > 2 and len(match.group(3).strip()) > 0:
         return class_doc_link(match.group(2), match.group(3), match.group(1))
     return class_doc_link(item_name=match.group(2), item_type=match.group(1))
 
@@ -148,8 +148,7 @@ def is_godot_engine(class_name: str = "") -> bool:
 def class_doc_link(
     class_name: str = "", item_name: str = "", item_type: str = "method"
 ) -> str:
-    # print(f"class_name={class_name} item_name={item_name} item_type={item_type}")
-    if is_godot_engine(class_name):
+    if is_godot_engine(class_name) and item_type != "member":
         return godot_class_doc_link(class_name, item_name, item_type)
     return file_local_doc_link(class_name, item_name, item_type)
 
