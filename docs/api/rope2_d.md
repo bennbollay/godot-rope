@@ -27,7 +27,7 @@ Create a new rope to the position in [end_position_vector](#end_position_vector)
 Create a new rope to an anchor created under [ending_anchor_mount_point](#ending_anchor_mount_point).
 #### • `DEFAULT_PIECE_LENGTH`: `20.0` <a id='DEFAULT_PIECE_LENGTH'></a>
 
-Default length for a [RopePiece](./rope_piece.md).  Overwritten by [rope_piece_parameters.piece-length](https://docs.godotengine.org/en/stable/classes/class_rope_piece_parameters.html#class-rope_piece_parameters-property-piece-length).
+Default length for a [RopePiece](./rope_piece.md).  Overwritten by [rope_piece_parameters.piece_length](https://docs.godotengine.org/en/stable/classes/class_rope_piece_parameters.html#class-rope_piece_parameters-property-piece-length).
 #### • `DEFAULT_LOCATION_TOLERANCE`: `4.0` <a id='DEFAULT_LOCATION_TOLERANCE'></a>
 
 Default value for how close a [RopePiece](./rope_piece.md) has to get to a target anchor or location to be considered as having arrived.
@@ -62,7 +62,7 @@ Specify the target end position for the [Rope2D](./rope2_d.md), used when [creat
 
 Specify the target end position for the [Rope2D](./rope2_d.md), used when [create](#create) is called or on [_ready](#_ready) if [ready_action](#ready_action) is set to [Rope2D.CREATE_TO_POSITION](./rope2_d.md#CREATE_TO_POSITION), and [end_position_vector](#end_position_vector) is not set.
 
-Only [Node2D.global-position](https://docs.godotengine.org/en/stable/classes/class_node2d.html#class-node2d-property-global-position) is used. Use [ending_anchor_mount_point](#ending_anchor_mount_point) to control where the ending anchor is mounted in the tree.
+Only [Node2D.global_position](https://docs.godotengine.org/en/stable/classes/class_node2d.html#class-node2d-property-global-position) is used. Use [ending_anchor_mount_point](#ending_anchor_mount_point) to control where the ending anchor is mounted in the tree.
 #### • `rope_piece_mount_point` <a id='rope_piece_mount_point'></a>
 
 Specifies the node on the tree to mount newly created [RopePiece](./rope_piece.md) under, including anchors if neither [starting_anchor_mount_point](#starting_anchor_mount_point) or [ending_anchor_mount_point](#ending_anchor_mount_point) are specified.
@@ -132,7 +132,7 @@ Add (or remove, if negative) `spool_length` of [RopePiece](./rope_piece.md) elem
 
 If `spool_length` is negative, then pieces are pulled back into the spool using the force value specified in [RopePieceParameters.push_rope_force](./rope_piece_parameters.md#push_rope_force).
 
-If `spool_length` is positive, then pieces are extruded at a rate commensurate with the force being exerted on the [Rope2D](./rope2_d.md), as from a [WindArea2D](./wind_area2_d.md) or gravity. Additionally, if [RopePieceParmaeters.push-rope](https://docs.godotengine.org/en/stable/classes/class_ropepieceparmaeters.html#class-ropepieceparmaeters-annotation-push-rope) is set to true, then [RopePieceParameters.push_rope_force](./rope_piece_parameters.md#push_rope_force) will be added to whatever other forces are applied against the rope.
+If `spool_length` is positive, then pieces are extruded at a rate commensurate with the force being exerted on the [Rope2D](./rope2_d.md), as from a [WindArea2D](./wind_area2_d.md) or gravity. Additionally, if [RopePieceParmaeters.push_rope](https://docs.godotengine.org/en/stable/classes/class_ropepieceparmaeters.html#class-ropepieceparmaeters-annotation-push-rope) is set to true, then [RopePieceParameters.push_rope_force](./rope_piece_parameters.md#push_rope_force) will be added to whatever other forces are applied against the rope.
 
 **Warning:** Spool is not a particularly fast implementation, so alternative approaches may be necessary if a large number of pieces need to be spooled out rapidly.
 
@@ -167,13 +167,13 @@ Returns the length of the [RopePiece](./rope_piece.md)s between `from` and `to`,
 ### • [Vector2[]](https://docs.godotengine.org/en/stable/classes/class_vector2[].html)&nbsp;&nbsp;`get_points(` `local:`&nbsp;&nbsp;[Vector2](https://docs.godotengine.org/en/stable/classes/class_vector2.html)`)`  <a id='get_points'></a>
 
 #### Description:
-Returns an [Array](https://docs.godotengine.org/en/stable/classes/class_array.html)[[Vector2](https://docs.godotengine.org/en/stable/classes/class_vector2.html) of the [Node2D.global-position](https://docs.godotengine.org/en/stable/classes/class_node2d.html#class-node2d-annotation-global-position)'s for each [RopePiece](./rope_piece.md), with `local` removed from each one.
+Returns an [Array](https://docs.godotengine.org/en/stable/classes/class_array.html)[[Vector2](https://docs.godotengine.org/en/stable/classes/class_vector2.html) of the [Node2D.global_position](https://docs.godotengine.org/en/stable/classes/class_node2d.html#class-node2d-annotation-global-position)'s for each [RopePiece](./rope_piece.md), with `local` removed from each one.
 
 Used when drawing a [Line2D](https://docs.godotengine.org/en/stable/classes/class_line2d.html) or other visual effect that follows the [Rope2D](./rope2_d.md).   
 #### Parameters:
 
 
-* `local` - A coordinate translation to transpose the points into a common coordinate space, such as [Node2D.global-position](https://docs.godotengine.org/en/stable/classes/class_node2d.html#class-node2d-property-global-position)
+* `local` - A coordinate translation to transpose the points into a common coordinate space, such as [Node2D.global_position](https://docs.godotengine.org/en/stable/classes/class_node2d.html#class-node2d-property-global-position)
 ***
 ### • [RopePiece](./rope_piece.md)&nbsp;&nbsp;`get_end_anchor(` `)`  <a id='get_end_anchor'></a>
 
@@ -188,14 +188,14 @@ Freeze all of the physics in the Rope, extremely useful when debugging. An `unfr
 ### • [Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html)&nbsp;&nbsp;`to_json(` `preserve_velocity:`&nbsp;&nbsp;`bool` `)`  <a id='to_json'></a>
 
 #### Description:
-Returns a serializable [Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html) that represents the [Rope2D](./rope2_d.md) as a sequence of [RigidBody2D.rotation](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html#class-rigidbody2d-annotation-rotation) of [piece_length](#piece_length) size. Optionally preserve the [RigidBody2D.linear-velocity](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html#class-rigidbody2d-property-linear-velocity) and [RigidBody2D.angular-velocity](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html#class-rigidbody2d-property-angular-velocity) if `preserve_velocity` is `TRUE`
+Returns a serializable [Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html) that represents the [Rope2D](./rope2_d.md) as a sequence of [RigidBody2D.rotation](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html#class-rigidbody2d-annotation-rotation) of [piece_length](#piece_length) size. Optionally preserve the [RigidBody2D.linear_velocity](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html#class-rigidbody2d-property-linear-velocity) and [RigidBody2D.angular_velocity](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html#class-rigidbody2d-property-angular-velocity) if `preserve_velocity` is `TRUE`
 
 Must be restored to a [Rope2D](./rope2_d.md) with matching [RopePieceParameters.piece_length](./rope_piece_parameters.md#piece_length), but other parameters and mount points are not persisted.
 
 #### Parameters:
 
 
-* `preserve_velocity` - Record the [RigidBody2D.linear-velocity](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html#class-rigidbody2d-annotation-linear-velocity) and [RigidBody2D.angular-velocity](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html#class-rigidbody2d-annotation-angular-velocity) of the [RopePiece](./rope_piece.md)
+* `preserve_velocity` - Record the [RigidBody2D.linear_velocity](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html#class-rigidbody2d-annotation-linear-velocity) and [RigidBody2D.angular_velocity](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html#class-rigidbody2d-annotation-angular-velocity) of the [RopePiece](./rope_piece.md)
 ***
 ### • [RopePiece](./rope_piece.md)&nbsp;&nbsp;`from_json(` `saved_rope:`&nbsp;&nbsp;`Variant` `)`  <a id='from_json'></a>
 

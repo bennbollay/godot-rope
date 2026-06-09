@@ -178,9 +178,6 @@ def godot_class_doc_link(
     if item_type == "member":
         item_type = "property"  # godot docs named it differently between url and xml for some reason
 
-    if item_name is not None:
-        item_name = item_name.replace("_", "-")
-
     anchor = ""
     if item_name is not None:
         anchor += f"#{item_type}-{item_name}"
@@ -190,7 +187,8 @@ def godot_class_doc_link(
     text_name = f"{class_name}"
     docs_link = f"https://docs.godotengine.org/en/stable/classes/class_{class_name.lower()}.html"
     if item_name:
-        docs_link += f"#class-{class_name.lower()}-{item_type}-{item_name.lower()}"
+        url_item_name = item_name.replace("_", "-")
+        docs_link += f"#class-{class_name.lower()}-{item_type}-{url_item_name.lower()}"
         text_name += f".{item_name}"
     return f"[{text_name}]({docs_link})"
 

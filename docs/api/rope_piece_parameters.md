@@ -17,7 +17,7 @@ Specifies if the [RopePiece](./rope_piece.md) should be pushed out of the [Rope2
 Force to use when adding (if [push_rope](#push_rope) is set to `TRUE`) or removing [RopePiece](./rope_piece.md) via [Rope2D.spool](./rope2_d.md#spool).
 #### • `gravity_scale` <a id='gravity_scale'></a>
 
-Overloads [RigidBody2D.gravity-scale](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html#class-rigidbody2d-annotation-gravity-scale).
+Overloads [RigidBody2D.gravity_scale](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html#class-rigidbody2d-annotation-gravity-scale).
 #### • `mass` <a id='mass'></a>
 
 Overloads [RigidBody2D.mass](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html#class-rigidbody2d-annotation-mass).
@@ -26,24 +26,24 @@ Overloads [RigidBody2D.mass](https://docs.godotengine.org/en/stable/classes/clas
 Overloads [RigidBody2D.freeze](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html#class-rigidbody2d-annotation-freeze).
 #### • `linear_damp_mode` <a id='linear_damp_mode'></a>
 
-Overloads [RigidBody2D.linear-damp-mode](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html#class-rigidbody2d-annotation-linear-damp-mode).
+Overloads [RigidBody2D.linear_damp_mode](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html#class-rigidbody2d-annotation-linear-damp-mode).
 #### • `linear_damp` <a id='linear_damp'></a>
 
-Overloads [RigidBody2D.linear-damp](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html#class-rigidbody2d-annotation-linear-damp).
+Overloads [RigidBody2D.linear_damp](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html#class-rigidbody2d-annotation-linear-damp).
 #### • `angular_damp_mode` <a id='angular_damp_mode'></a>
 
-Overloads [RigidBody2D.angular-damp-mode](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html#class-rigidbody2d-annotation-angular-damp-mode).
+Overloads [RigidBody2D.angular_damp_mode](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html#class-rigidbody2d-annotation-angular-damp-mode).
 #### • `angular_damp` <a id='angular_damp'></a>
 
-Overloads [RigidBody2D.angular-damp](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html#class-rigidbody2d-annotation-angular-damp).
+Overloads [RigidBody2D.angular_damp](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html#class-rigidbody2d-annotation-angular-damp).
 #### • `collision_layer` <a id='collision_layer'></a>
 
-Overloads [CollisionObject2D.collision-layer](https://docs.godotengine.org/en/stable/classes/class_collisionobject2d.html#class-collisionobject2d-annotation-collision-layer).
+Overloads [CollisionObject2D.collision_layer](https://docs.godotengine.org/en/stable/classes/class_collisionobject2d.html#class-collisionobject2d-annotation-collision-layer).
 
 **Note:** Do not have the [collision_layer](#collision_layer) and [collision_mask](#collision_mask) overlap.
 #### • `collision_mask` <a id='collision_mask'></a>
 
-Overloads [CollisionObject2D.collision-mask](https://docs.godotengine.org/en/stable/classes/class_collisionobject2d.html#class-collisionobject2d-annotation-collision-mask).
+Overloads [CollisionObject2D.collision_mask](https://docs.godotengine.org/en/stable/classes/class_collisionobject2d.html#class-collisionobject2d-annotation-collision-mask).
 
 **Note:** Do not have the [collision_layer](#collision_layer) and [collision_mask](#collision_mask) overlap.
 #### • `pin_joint_softness` <a id='pin_joint_softness'></a>

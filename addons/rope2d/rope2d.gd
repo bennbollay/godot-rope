@@ -223,7 +223,7 @@ func _new_anchor(mount: Node, params: RopePieceParameters) -> RopePiece:
 	if rope_type == RopeType.ROPE_TYPE_PINJOINT:
 		anchor = RopeAnchorPinJoint.create_anchor(mount, params)
 	#elif rope_type == RopeType.ROPE_TYPE_GROOVEPIN:
-	#	anchor = RopeAnchorGroovePin.create_anchor(self, rope_anchor_parameters)
+	#	anchor = RopeAnchorGroovePin.create_anchor(mount, params)
 	else:
 		return null
 

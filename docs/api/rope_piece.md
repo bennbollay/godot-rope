@@ -17,7 +17,7 @@ Forcefully push this piece onto the rope when unspooling.
 
 #### • `follow_mouse` <a id='follow_mouse'></a>
 
-Push this piece towards the current [CanvasItem.get-global-mouse-position](https://docs.godotengine.org/en/stable/classes/class_canvasitem.html#class-canvasitem-method-get-global-mouse-position).
+Push this piece towards the current [CanvasItem.get_global_mouse_position](https://docs.godotengine.org/en/stable/classes/class_canvasitem.html#class-canvasitem-method-get-global-mouse-position).
 #### • `next_piece` <a id='next_piece'></a>
 
 The next [RopePiece](./rope_piece.md) in the [Rope2D](./rope2_d.md).
@@ -51,7 +51,7 @@ Update the joint's bias and softness parameters.
 ### • `abstract` `void`&nbsp;&nbsp;`set_velocities(` `linear:`&nbsp;&nbsp;[Vector2](https://docs.godotengine.org/en/stable/classes/class_vector2.html)`, ` `angular:`&nbsp;&nbsp;`float` `)`  <a id='set_velocities'></a>
 
 #### Description:
-Set the [RigidBody2D.linear-velocity](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html#class-rigidbody2d-property-linear-velocity) and [RigidBody2D.angular-velocity](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html#class-rigidbody2d-property-angular-velocity) on the [RopePiece](./rope_piece.md).
+Set the [RigidBody2D.linear_velocity](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html#class-rigidbody2d-property-linear-velocity) and [RigidBody2D.angular_velocity](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html#class-rigidbody2d-property-angular-velocity) on the [RopePiece](./rope_piece.md).
 ***
 ### • `abstract` `String`&nbsp;&nbsp;`get_relocation_path(` `)`  <a id='get_relocation_path'></a>
 
@@ -86,7 +86,7 @@ Returns the rotation, in radians, of the [RopePiece](./rope_piece.md).
 ### • `abstract` [Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html)&nbsp;&nbsp;`get_velocities(` `)`  <a id='get_velocities'></a>
 
 #### Description:
-Return a [Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html) of the [RigidBody2D.linear-velocity](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html#class-rigidbody2d-property-linear-velocity) and [RigidBody2D.angular-velocity](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html#class-rigidbody2d-property-angular-velocity).
+Return a [Dictionary](https://docs.godotengine.org/en/stable/classes/class_dictionary.html) of the [RigidBody2D.linear_velocity](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html#class-rigidbody2d-property-linear-velocity) and [RigidBody2D.angular_velocity](https://docs.godotengine.org/en/stable/classes/class_rigidbody2d.html#class-rigidbody2d-property-angular-velocity).
 ***
 ### • `void`&nbsp;&nbsp;`relocate_to(` `length:`&nbsp;&nbsp;`float` `, ` `angle:`&nbsp;&nbsp;`float` `, ` `target_anchor:`&nbsp;&nbsp;[RopePiece](./rope_piece.md)`, ` `force:`&nbsp;&nbsp;`float` `, ` `new_position:`&nbsp;&nbsp;[Vector2](https://docs.godotengine.org/en/stable/classes/class_vector2.html)`)`  <a id='relocate_to'></a>
 

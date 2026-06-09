@@ -13,9 +13,7 @@ func _process(delta: float) -> void:
 		delta,
 		func():
 			if Input.is_key_pressed(KEY_ENTER):
-				print("extending")
 				$Rope2D.extend($Target.global_position, 100)
 			if Input.is_key_pressed(KEY_SPACE):
-				print("contracting")
 				$Rope2D.contract(100)
 	)
