@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://x1ysc006n3dx" path="res://addons/rope2d/test/spooling.gd" id="5_a0dvm"]
 [ext_resource type="Script" uid="uid://cujfol0q25pgs" path="res://addons/rope2d/test/extending.gd" id="7_3jgq3"]
 [ext_resource type="Script" uid="uid://cep2bvkhu72ic" path="res://addons/rope2d/test/mouse.gd" id="8_a5l37"]
+[ext_resource type="Script" uid="uid://cko7mihvrhxxb" path="res://addons/rope2d/test/deleting.gd" id="8_jah7k"]
 
 [sub_resource type="Resource" id="Resource_kelt8"]
 script = ExtResource("3_enyik")
@@ -146,6 +147,33 @@ rope_starting_anchor_parameters = SubResource("Resource_l0y6s")
 metadata/_custom_type_script = "uid://e4erd0bi0dy6"
 
 [node name="Target" type="Node2D" parent="Extending" unique_id=1173355057]
+position = Vector2(1000, 100)
+
+[node name="Deleting" type="Label" parent="." unique_id=1979408879]
+offset_left = 150.0
+offset_top = 800.0
+offset_right = 574.0
+offset_bottom = 823.0
+text = "deleting (press x to delete)"
+script = ExtResource("8_jah7k")
+
+[node name="Rope2D" type="Node2D" parent="Deleting" unique_id=252215302 node_paths=PackedStringArray("end_position_node", "rope_piece_mount_point", "starting_anchor_mount_point", "ending_anchor_mount_point")]
+position = Vector2(100, 50)
+script = ExtResource("2_jah7k")
+rope_starting_anchor_parameters = SubResource("Resource_l0y6s")
+ready_action = 1
+end_position_node = NodePath("../Target")
+rope_piece_mount_point = NodePath("../Pieces")
+starting_anchor_mount_point = NodePath("../Start")
+ending_anchor_mount_point = NodePath("../Target")
+metadata/_custom_type_script = "uid://e4erd0bi0dy6"
+
+[node name="Start" type="Node2D" parent="Deleting" unique_id=216575849]
+position = Vector2(100, 100)
+
+[node name="Pieces" type="Node" parent="Deleting" unique_id=1325870248]
+
+[node name="Target" type="Node2D" parent="Deleting" unique_id=1873972322]
 position = Vector2(1000, 100)
 
 [node name="Mouse" type="StaticBody2D" parent="." unique_id=2114753636]

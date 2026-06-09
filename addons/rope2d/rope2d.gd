@@ -110,9 +110,6 @@ signal on_new_rope_anchor(anchor: RopePiece)
 signal on_rope_create(rope: Rope2D)
 
 # XXX:
-#    Delete to remove a Rope and clean up after itself
-#    Smooth extend() that tween's towards the target for the last pieces.
-#  Add test case for [code]push_force[/code]
 #  Set up a "launcher" test.
 #    * Fire a projectile and then extend the line out after it?
 #    -- This is actually a pretty good idea, doing the same "extend" that
@@ -173,20 +170,26 @@ func _ready():
 	
 	if ready_action == ReadyAction.NOTHING:
 		return
+		
 	if ready_action == ReadyAction.CREATE_TO_POSITION:
 		if not _validate_create_to_mount_configuration():
 			return
+			
+		await _guarantee_ready(ending_anchor_mount_point)
+
 		if end_position_vector:
 			_rope_start.set_piece_rotation(_get_spawn_angle(_rope_start, end_position_vector))
 			create_rope(end_position_vector)
 		elif end_position_node:
 			_rope_start.set_piece_rotation(_get_spawn_angle(_rope_start, end_position_node.global_position))
 			create_rope(end_position_node.global_position)
+			
 	elif ready_action == ReadyAction.CREATE_TO_MOUNT:
 		if not _validate_create_to_mount_configuration():
 			return
-		_rope_start.set_piece_rotation(_get_spawn_angle(_rope_start, ending_anchor_mount_point.global_position))
 		await _guarantee_ready(ending_anchor_mount_point)
+		
+		_rope_start.set_piece_rotation(_get_spawn_angle(_rope_start, ending_anchor_mount_point.global_position))
 		create_rope(ending_anchor_mount_point.global_position)
 
 func _guarantee_ready(n: Node):
@@ -514,6 +517,17 @@ func _unspool_next_piece():
 	old_first_piece.queue_free()
 	_rope_start.set_piece_visible(true)
 
+## Delete all of the created nodes in the rope and remove itself.[br]
+## [br]
+## This is especially relevant if [member rope_piece_mount_point],
+## [member starting_anchor_mount_point], or [member ending_anchor_mount_point]
+## are located outside of the [Rope2D] tree.[br]
+func delete():
+	var walker: RopePiece = _rope_start
+	while walker:
+		walker.queue_free()
+		walker = walker.next_piece
+	queue_free()
 
 ## Returns the length of the [RopePiece]s between [param from] and [param to], or
 ## the entire [Rope2D] if unspecified.[br]
