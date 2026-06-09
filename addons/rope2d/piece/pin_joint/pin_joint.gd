@@ -14,20 +14,23 @@ static func create_piece(mount: Node, params: RopePieceParameters) -> RopePiece:
 	params.apply(piece)
 	return piece
 
+
 static func create_anchor(mount: Node, params: RopePieceParameters) -> RopePiece:
 	var anchor: RopePiece = load("uid://bhof88x0fym2i").instantiate()
 	mount.add_child(anchor)
 	params.apply(anchor)
 	return anchor
 
+
 func _ready() -> void:
 	joint.node_a = get_path()
+
 
 func rename(n: String):
 	name = n
 	joint.node_a = get_path()
-	
-	
+
+
 func get_angle_to_next() -> float:
 	var node_b := get_node(joint.node_b) as Node2D
 	return global_position.angle_to_point(node_b.global_position) - PI / 2
@@ -58,11 +61,14 @@ func clear_next():
 func get_relocation_path() -> String:
 	return get_path()
 
+
 func as_rigidbody() -> RigidBody2D:
 	return (self as Variant as RigidBody2D)
 
+
 func add_relocation_force(force: Vector2):
 	as_rigidbody().add_constant_force(force)
+
 
 func apply_piece_parameters(p: RopePieceParameters):
 	var r: RigidBody2D = as_rigidbody()
@@ -75,27 +81,32 @@ func apply_piece_parameters(p: RopePieceParameters):
 	r.angular_damp = p.angular_damp
 	r.collision_layer = p.collision_layer
 	r.collision_mask = p.collision_mask
-	
+
 	push_rope = p.push_rope
 	push_rope_force = p.push_rope_force
-	
+
 	set_joint_parameters(p.pin_joint_bias, p.pin_joint_softness)
 	set_shape(p.shape, p.piece_length)
+
 
 func get_prev_position() -> Vector2:
 	return as_rigidbody().global_position
 
+
 func get_next_position() -> Vector2:
 	return joint.global_position
 
+
 func get_rotation() -> float:
 	return as_rigidbody().rotation
+
 
 func set_velocities(linear: Vector2, angular: float):
 	var r: RigidBody2D = as_rigidbody()
 	r.linear_velocity = linear
 	r.angular_velocity = angular
-	
+
+
 func get_velocities() -> Dictionary:
 	var r: RigidBody2D = as_rigidbody()
 
@@ -103,6 +114,7 @@ func get_velocities() -> Dictionary:
 		"linear_velocity": str(r.linear_velocity),
 		"angular_velocity": r.angular_velocity,
 	}
+
 
 func update_relocation() -> bool:
 	if _location_target == Vector2.INF:

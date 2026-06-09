@@ -16,6 +16,7 @@ class_name RopeAnchorGroovePin
 @export var gravity_scale: float = 1.0
 @export var freeze: bool = false
 
+
 func _ready() -> void:
 	super()
 	$Pin.mass = mass

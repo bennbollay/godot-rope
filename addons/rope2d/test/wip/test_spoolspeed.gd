@@ -6,16 +6,18 @@ class Tracker extends Label:
 	var label: String
 	var min_v: float = ABS_V
 	var max_v: float = -ABS_V
-	
+
 	var update: Callable
-	
+
 	static var start_position: Vector2 = Vector2(50, 50)
 	const LINE_HEIGHT: float = 50
-	
+
+
 	func _init(label_: String, update_: Callable):
 		label = label_
 		update = update_
-	
+
+
 	func _ready() -> void:
 		global_position = start_position
 		start_position.y += LINE_HEIGHT
@@ -28,7 +30,9 @@ class Tracker extends Label:
 		max_v = max(max_v, v)
 		text = "%s: [%03.2f, %03.2f]" % [label, min_v, max_v]
 
+
 var trackers: Array[Tracker] = []
+
 
 func spool_pinjoint_rope():
 	var rope := Rope2D.new($RopePinJointAnchor)
@@ -38,12 +42,21 @@ func spool_pinjoint_rope():
 	await rope.spool(49)
 	var total_time := (Time.get_ticks_msec() - start_time) / 1000.0
 
-	add_child(Tracker.new("[PJ] Time", func (_d) -> float:
-		return total_time
-	))
-	add_child(Tracker.new("[PJ] Length", func(_delta: float) -> float:
-		return rope.calculate_rope_length()
-	))
-	
+	add_child(
+		Tracker.new(
+			"[PJ] Time",
+			func(_d) -> float:
+				return total_time
+		),
+	)
+	add_child(
+		Tracker.new(
+			"[PJ] Length",
+			func(_delta: float) -> float:
+				return rope.calculate_rope_length()
+		),
+	)
+
+
 func _ready() -> void:
 	spool_pinjoint_rope()

@@ -20,6 +20,7 @@ class_name RopeAnchorPinJoint
 func is_anchor() -> bool:
 	return true
 
+
 ## Prevent changing the shape of the anchor to the default CapsuleShape2D.
 func set_shape(shape: Shape2D, piece_length: float):
 	if shape is CapsuleShape2D:

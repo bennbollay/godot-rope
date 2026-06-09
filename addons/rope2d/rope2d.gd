@@ -24,14 +24,14 @@ enum RopeType {
 enum ReadyAction {
 	## Do not create a rope when this node is added to the tree.
 	NOTHING,
-	
+
 	## Create a new rope to the position in [member end_position_vector] or the position
 	## of the node specified in [member end_position_node].[br]
 	## [br]
 	## [b]Note:[/b] Does not mount the ending anchor under [member end_position_node]. Set
 	## [member ending_anchor_mount_point] if that's desired, or use [constant Rope2D.CREATE_TO_MOUNT].
 	CREATE_TO_POSITION,
-	
+
 	## Create a new rope to an anchor created under [member ending_anchor_mount_point].
 	CREATE_TO_MOUNT,
 }
@@ -75,7 +75,6 @@ const DEFAULT_LOCATION_TOLERANCE := 4.0
 ## Only [member Node2D.global_position] is used. Use [member ending_anchor_mount_point]
 ## to control where the ending anchor is mounted in the tree.
 @export var end_position_node: Node2D
-
 
 @export_group("Mount Points (Optional)")
 ## Specifies the node on the tree to mount newly created [RopePiece]
@@ -139,7 +138,7 @@ func _init() -> void:
 		starting_anchor_mount_point = self
 	if not ending_anchor_mount_point:
 		ending_anchor_mount_point = rope_piece_mount_point
-	
+
 	# Populate the default parameters
 	if not rope_piece_parameters:
 		rope_piece_parameters = RopePieceParameters.new()
@@ -157,14 +156,14 @@ func _init() -> void:
 func _ready():
 	await _guarantee_ready(starting_anchor_mount_point)
 	_rope_start = _new_anchor(starting_anchor_mount_point, rope_starting_anchor_parameters)
-	
+
 	if ready_action == ReadyAction.NOTHING:
 		return
-		
+
 	if ready_action == ReadyAction.CREATE_TO_POSITION:
 		if not _validate_create_to_mount_configuration():
 			return
-			
+
 		await _guarantee_ready(ending_anchor_mount_point)
 
 		if end_position_vector:
@@ -173,19 +172,21 @@ func _ready():
 		elif end_position_node:
 			_rope_start.set_piece_rotation(_get_spawn_angle(_rope_start, end_position_node.global_position))
 			create_rope(end_position_node.global_position)
-			
+
 	elif ready_action == ReadyAction.CREATE_TO_MOUNT:
 		if not _validate_create_to_mount_configuration():
 			return
 		await _guarantee_ready(ending_anchor_mount_point)
-		
+
 		_rope_start.set_piece_rotation(_get_spawn_angle(_rope_start, ending_anchor_mount_point.global_position))
 		create_rope(ending_anchor_mount_point.global_position)
+
 
 func _guarantee_ready(n: Node):
 	if not n.is_node_ready():
 		await n.ready
-	
+
+
 # Without a valid position, or a [Node2D] whose global_position can be used,
 # the [constant Rope2D.CREATE_TO_POSITION] setting isn't able to create the desired Rope2D.
 func _validate_create_to_position_configuration() -> bool:
@@ -193,6 +194,7 @@ func _validate_create_to_position_configuration() -> bool:
 		push_warning("Create To Position missing end_position_vector or end_position_node.")
 		return false
 	return true
+
 
 # Without a Node2D ending_anchor_mount_point, the Rope2D defaults to (0,0), which
 # is almost certainly not the desired behavior.
@@ -211,9 +213,10 @@ func _new_piece() -> RopePiece:
 	#	piece = RopePieceGroovePin.create(self, rope_piece_parameters)
 	else:
 		return null
-	
+
 	on_new_rope_piece.emit(piece)
 	return piece
+
 
 func _new_anchor(mount: Node, params: RopePieceParameters) -> RopePiece:
 	var anchor: RopePiece
@@ -223,25 +226,28 @@ func _new_anchor(mount: Node, params: RopePieceParameters) -> RopePiece:
 	#	anchor = RopeAnchorGroovePin.create_anchor(self, rope_anchor_parameters)
 	else:
 		return null
-	
+
 	on_new_rope_anchor.emit(anchor)
 	return anchor
+
 
 func _get_spawn_angle(start_piece: RopePiece = _rope_start, end_pos: Vector2 = _rope_last_piece.global_position):
 	var start_pos: Vector2 = start_piece.get_next_position()
 	var actual_angle := start_pos.angle_to_point(end_pos)
 	var spawn_angle: float = actual_angle - PI / 2
-	
+
 	return spawn_angle
+
 
 func _max_length_to_max_segments(max_length: float = -1) -> int:
 	if max_length == -1:
 		return -1
 	return _length_to_segments(max_length)
 
+
 func _length_to_segments(max_length: float = -1) -> int:
 	return sign(max_length) * ceil(abs(max_length / piece_length))
-	
+
 
 ## Create [RopePiece] elements between the Rope2D and [param target].[br]
 ## [br]
@@ -259,10 +265,10 @@ func create_rope(target: Vector2, max_length: float = -1, start_piece: RopePiece
 	var max_segments = _max_length_to_max_segments(max_length)
 	var start_pos: Vector2 = start_piece.get_next_position()
 	var distance := start_pos.distance_to(target)
-	
+
 	if distance < close_tolerance:
 		return _rope_end
-		
+
 	var num_segments: int = _length_to_segments(distance)
 	var spawn_angle: float = _get_spawn_angle(start_piece, target)
 
@@ -276,8 +282,9 @@ func create_rope(target: Vector2, max_length: float = -1, start_piece: RopePiece
 	_rope_last_piece.set_next_piece(_rope_end)
 
 	on_rope_create.emit(self)
-	
+
 	return _rope_end
+
 
 ## Extend the length of an already [method create_rope]ed [Rope2D] in the direction of [param target]
 ## for a maximum [param max_segments], [code]-1[/code] means until the last [RopePiece]
@@ -305,6 +312,7 @@ func extend(target: Vector2, max_length: int = -1) -> RopePiece:
 		return create_rope(target, max_length, _rope_last_piece)
 	return create_rope(target, max_length)
 
+
 ## Reduce the length of the rope by [param length] by trimming pieces from the
 ## end of the rope. Adds a new anchor at the end.[br]
 ## [br]
@@ -312,7 +320,7 @@ func extend(target: Vector2, max_length: int = -1) -> RopePiece:
 ## * [param length] - the amount to remove from the end.
 func contract(length: float):
 	var segments := _length_to_segments(length)
-	
+
 	if segments <= 0:
 		return
 
@@ -333,17 +341,18 @@ func contract(length: float):
 	if not new_last_piece or new_last_piece.is_anchor():
 		# Rope is already too short; just remove the whole rope already.
 		return
-	
+
 	# Create the new anchor for the rope.
 	var dead_piece := new_last_piece.next_piece
 	_rope_last_piece = new_last_piece
 	_rope_end = _create_ending_anchor(ending_anchor_mount_point, _rope_last_piece, -1, new_last_piece.rotation)
 	_rope_last_piece.set_next_piece(_rope_end)
-	
+
 	# Delete all of the now unnecessary pieces, including the old trailing anchor.
 	while dead_piece:
 		dead_piece.queue_free()
 		dead_piece = dead_piece.next_piece
+
 
 ## Add (or remove, if negative) [param spool_length] of [RopePiece] elements to
 ## a logical "spool" located at [member _rope_start].  As the [Rope2D] is
@@ -386,7 +395,7 @@ func spool(spool_length: float = 1, lock = randf()):
 		# Spooling already in progress
 		await _on_spool_release
 		return
-		
+
 	while _pending_spool_pieces != 0:
 		if _pending_spool_pieces > 0:
 			await _spool_next_piece()
@@ -394,11 +403,10 @@ func spool(spool_length: float = 1, lock = randf()):
 		if _pending_spool_pieces < 0:
 			await _unspool_next_piece()
 			_pending_spool_pieces += 1
-	
+
 	# Release the lock
 	_spool_lock = 0
 	_on_spool_release.emit()
-
 
 
 func _create_rope_segments(start: RopePiece, num_segments: int, spawn_angle: float, end_pos: Variant) -> RopePiece:
@@ -422,9 +430,10 @@ func _create_piece(prev_piece: RopePiece, _id: int, spawn_angle: float) -> RopeP
 
 	return piece
 
+
 func _create_ending_anchor(mount: Node, prev_piece: RopePiece, _id: int, spawn_angle: float) -> RopePiece:
 	var piece := _new_anchor(mount, rope_ending_anchor_parameters)
-	
+
 	piece.set_piece_position(prev_piece.get_next_position())
 	piece.set_piece_rotation(spawn_angle)
 
@@ -452,7 +461,6 @@ func _spool_next_piece():
 	new_start.set_piece_position(new_position)
 	#print(new_start, "Starting new position from ", _rope_start.global_position, "@", rad_to_deg(start_angle - PI / 2), " for ", piece_length, " = ", new_position)
 
-
 	# Create the new piece to insert into the rope
 	var new_piece := _create_piece(new_start, 99, start_angle)
 
@@ -470,9 +478,10 @@ func _spool_next_piece():
 
 	# Reattach the old start and free the new start when the new start arrives
 	_rope_start.set_next_piece(new_piece)
-	
+
 	new_start.queue_free()
 	_rope_start.set_piece_visible(true)
+
 
 func _unspool_next_piece():
 	var old_first_piece := _rope_start.next_piece
@@ -493,7 +502,6 @@ func _unspool_next_piece():
 	new_start.set_piece_position(_rope_start.get_prev_position())
 	#print(new_start, "Starting new position from ", _rope_start.global_position, "@", rad_to_deg(start_angle - PI / 2), " for ", piece_length, " = ", new_position)
 
-
 	# Connect the old first piece after the new piece
 	new_start.set_next_piece(old_first_piece)
 
@@ -507,10 +515,11 @@ func _unspool_next_piece():
 	await new_start.relocate_to(-piece_length, start_angle, _rope_start, rope_piece_parameters.push_rope_force, new_position)
 	_rope_start.set_next_piece(old_first_piece.next_piece)
 	old_first_piece.clear_next()
-	
+
 	new_start.queue_free()
 	old_first_piece.queue_free()
 	_rope_start.set_piece_visible(true)
+
 
 ## Delete all of the created nodes in the rope and remove itself.[br]
 ## [br]
@@ -523,6 +532,7 @@ func delete():
 		walker.queue_free()
 		walker = walker.next_piece
 	queue_free()
+
 
 ## Returns the length of the [RopePiece]s between [param from] and [param to], or
 ## the entire [Rope2D] if unspecified.[br]
@@ -543,6 +553,7 @@ func calculate_rope_length(from: RopePiece = _rope_start, to: RopePiece = _rope_
 
 	return dist
 
+
 ## Returns an [Array][lb][Vector2[rb] of the [annotation Node2D.global_position]'s for
 ## each [RopePiece], with [param local] removed from each one.[br]
 ## [br]
@@ -562,9 +573,11 @@ func get_points(local: Vector2 = Vector2.ZERO) -> Array[Vector2]:
 		walker = walker.next_piece
 	return points
 
+
 ## Returns the trailing anchor of the rope.
 func get_end_anchor() -> RopePiece:
 	return _rope_end
+
 
 ## Freeze all of the physics in the Rope, extremely useful when debugging. An
 ## [code]unfreeze_rope()[/code] is left as an exercise for the reader.
@@ -577,14 +590,15 @@ func freeze_rope():
 	_freeze_nodes(rope_piece_mount_point)
 	if _rope_last_piece.next_piece:
 		_freeze_nodes(_rope_last_piece.next_piece)
-	
+
+
 func _freeze_nodes(v: Variant):
 	if "freeze" in v:
 		v.freeze = true
 	if "get_children" in v:
 		for n in v.get_children():
 			_freeze_nodes(n)
-	
+
 
 ## Returns a serializable [Dictionary] that represents the [Rope2D] as a sequence
 ## of [annotation RigidBody2D.rotation] of [member piece_length] size. Optionally
@@ -607,42 +621,47 @@ func to_json(preserve_velocity: bool = false) -> Dictionary:
 		rope.append(walker.get_rotation())
 		if preserve_velocity:
 			forces.push_back(walker.get_velocities())
-			
+
 		last_piece = walker
 		walker = walker.next_piece
 
 	if rope.size() > 0:
 		assert(last_piece == _rope_end)
-	
+
 	return {
 		"piece_length": piece_length,
 		"rope": rope,
 		"forces": forces,
 		"end_global_position": str(last_piece.global_position),
-		"end_rotation": last_piece.rotation
+		"end_rotation": last_piece.rotation,
 	}
 
 
 func from_json(saved_rope: Variant) -> RopePiece:
 	if not "rope" in saved_rope:
 		return
-		
+
 	assert(saved_rope.piece_length == piece_length, "Different piece lengths unsupported")
-	
+
 	# Delete the existing pieces
 	var walker: RopePiece = _rope_start.next_piece
 	_rope_start.clear_next()
 	while walker:
 		walker.queue_free()
 		walker = walker.next_piece
-	
+
 	_rope_last_piece = _set_points(saved_rope.rope, saved_rope.forces)
 
 	# Assumes free-floating endpoint.
-	_rope_end = _create_ending_anchor(ending_anchor_mount_point, _rope_last_piece,
-			-1, saved_rope.end_rotation)
+	_rope_end = _create_ending_anchor(
+		ending_anchor_mount_point,
+		_rope_last_piece,
+		-1,
+		saved_rope.end_rotation,
+	)
 	_rope_end.set_piece_position(
-			Utility.string_to_vector2(saved_rope.end_global_position))
+		Utility.string_to_vector2(saved_rope.end_global_position),
+	)
 
 	return _rope_last_piece
 

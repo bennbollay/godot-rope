@@ -4,7 +4,6 @@ extends Resource
 ## elements.
 class_name RopePieceParameters
 
-
 ## Specifies the length of the [RopePiece].
 @export var piece_length: float = Rope2D.DEFAULT_PIECE_LENGTH
 ## Specifies if the [RopePiece] should be pushed out of
@@ -39,15 +38,15 @@ class_name RopePieceParameters
 ## Overloads [annotation CollisionObject2D.collision_layer].[br]
 ## [br]
 ## [b]Note:[/b] Do not have the [member collision_layer] and [member collision_mask] overlap.
-@export_flags_2d_physics var collision_layer: int = 1 :
+@export_flags_2d_physics var collision_layer: int = 1:
 	set(v):
 		collision_layer = v
 		validate()
-		
+
 ## Overloads [annotation CollisionObject2D.collision_mask].[br]
 ## [br]
 ## [b]Note:[/b] Do not have the [member collision_layer] and [member collision_mask] overlap.
-@export_flags_2d_physics var collision_mask: int = 0x10 :
+@export_flags_2d_physics var collision_mask: int = 0x10:
 	set(v):
 		collision_mask = v
 		validate()
@@ -78,23 +77,27 @@ var _param_list = [
 	"pin_joint_bias",
 ]
 
+
 func _init():
 	shape.height = piece_length
 	shape.radius = 1.0
 	validate()
 
+
 func to_json() -> Dictionary:
-	var r: Dictionary = {}
-	
+	var r: Dictionary = { }
+
 	for p in _param_list:
 		r[p] = get(p)
 
 	return r
 
+
 func validate():
 	if collision_layer & collision_mask:
 		print_rich("[color=yellow]WARNING: matching collision_layer (%02X) and collision_mask (%02X) on " % [collision_layer, collision_mask], self)
-		
+
+
 func apply(piece: RopePiece):
 	piece.apply_piece_parameters(self)
 
@@ -102,8 +105,8 @@ func apply(piece: RopePiece):
 static func from_json(p: Dictionary) -> RopePieceParameters:
 	var r: RopePieceParameters = RopePieceParameters.new()
 	# TBD - Support serialiation of the shape
-	
+
 	for k in p:
 		r.set(k, p[k])
-	
-	return r	
+
+	return r
