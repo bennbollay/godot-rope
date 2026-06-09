@@ -110,7 +110,7 @@ offset_left = 150.0
 offset_top = 500.0
 offset_right = 470.0
 offset_bottom = 549.0
-text = "spooling (press down or up)"
+text = "spooling (press down to lengthen or up to shorten)"
 script = ExtResource("5_a0dvm")
 
 [node name="Rope2D" type="Node2D" parent="Spooling" unique_id=64463343]
@@ -136,7 +136,7 @@ offset_left = 150.0
 offset_top = 650.0
 offset_right = 470.0
 offset_bottom = 673.0
-text = "extend  (press enter)"
+text = "extend  (press enter to lengthen, and space to shorten)"
 script = ExtResource("7_3jgq3")
 
 [node name="Rope2D" type="Node2D" parent="Extending" unique_id=907853778]

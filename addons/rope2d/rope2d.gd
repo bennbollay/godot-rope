@@ -110,12 +110,9 @@ signal on_new_rope_anchor(anchor: RopePiece)
 signal on_rope_create(rope: Rope2D)
 
 # XXX:
-#  Support negative values for spool and extend to withdraw elements smoothly.
-#    Splice to create two Rope's from one.
 #    Delete to remove a Rope and clean up after itself
 #    Smooth extend() that tween's towards the target for the last pieces.
 #  Add test case for [code]push_force[/code]
-#  Resolve contract violation of `spool` not returning after spool is complete.
 #  Set up a "launcher" test.
 #    * Fire a projectile and then extend the line out after it?
 #    -- This is actually a pretty good idea, doing the same "extend" that
@@ -244,6 +241,14 @@ func _get_spawn_angle(start_piece: RopePiece = _rope_start, end_pos: Vector2 = _
 	
 	return spawn_angle
 
+func _max_length_to_max_segments(max_length: float = -1) -> int:
+	if max_length == -1:
+		return -1
+	return _length_to_segments(max_length)
+
+func _length_to_segments(max_length: float = -1) -> int:
+	return sign(max_length) * ceil(abs(max_length / piece_length))
+	
 
 ## Create [RopePiece] elements between the Rope2D and [param target].[br]
 ## [br]
@@ -257,10 +262,11 @@ func _get_spawn_angle(start_piece: RopePiece = _rope_start, end_pos: Vector2 = _
 ## [br]
 ## * [param start_piece] - extend the current rope from this [RopePiece], largely
 ##   used internally from [method extend].
-func create_rope(target: Vector2, max_segments: int = -1, start_piece: RopePiece = _rope_start) -> RopePiece:
+func create_rope(target: Vector2, max_length: float = -1, start_piece: RopePiece = _rope_start) -> RopePiece:
+	var max_segments = _max_length_to_max_segments(max_length)
 	var start_pos: Vector2 = start_piece.get_next_position()
 	var distance := start_pos.distance_to(target)
-	var num_segments: int = ceil(distance / piece_length)
+	var num_segments: int = _length_to_segments(distance)
 	var spawn_angle: float = _get_spawn_angle(start_piece, target)
 
 	if max_segments != -1 and num_segments > max_segments:
@@ -291,25 +297,66 @@ func create_rope(target: Vector2, max_segments: int = -1, start_piece: RopePiece
 ## * [param target] - a [Vector2]
 ##   specifying the target location for the [Rope2D] to finish.[br]
 ## [br]
-## * [param max_segments] - the maximum number of segments, or [code]-1[/code] if no maximum,
+## * [param max_length] - the maximum length of rope, or [code]-1[/code] if no maximum,
 ##   to use when extending towards [param target].  Useful when specifying
 ##   a [Rope2D] of fixed length.[br]
-func extend(target: Vector2, max_segments: int = -1) -> RopePiece:
+func extend(target: Vector2, max_length: int = -1) -> RopePiece:
+	assert(max_length >= -1)
 	_rope_end.queue_free()
 	_rope_last_piece.clear_next()
-	return create_rope(target, max_segments, _rope_last_piece)
+	return create_rope(target, max_length, _rope_last_piece)
 
-## Add (or remove, if negative) [param spool_pieces] of [RopePiece] elements to
+## Reduce the length of the rope by [param length] by trimming pieces from the
+## end of the rope. Adds a new anchor at the end.[br]
+## [br]
+## [b]Parameters:[/b][br][br]
+## * [param length] - the amount to remove from the end.
+func contract(length: float):
+	var segments := _length_to_segments(length)
+	
+	if segments <= 0:
+		return
+
+	# Find the new last piece by walking the rope with a second
+	# walker a 'segments' pieces behind, ignoring anchors.
+	var new_last_piece: RopePiece
+	var walker: RopePiece = _rope_start.next_piece
+	while walker:
+		if segments > 0:
+			if not walker.is_anchor():
+				segments -= 1
+				if segments == 0:
+					new_last_piece = _rope_start
+		elif not walker.is_anchor():
+			new_last_piece = new_last_piece.next_piece
+		walker = walker.next_piece
+
+	if not new_last_piece or new_last_piece.is_anchor():
+		# Rope is already too short; just remove the whole rope already.
+		return
+	
+	# Create the new anchor for the rope.
+	var dead_piece := new_last_piece.next_piece
+	_rope_last_piece = new_last_piece
+	_rope_end = _create_ending_anchor(ending_anchor_mount_point, _rope_last_piece, -1, new_last_piece.rotation)
+	_rope_last_piece.set_next_piece(_rope_end)
+	
+	# Delete all of the now unnecessary pieces, including the old trailing anchor.
+	while dead_piece:
+		dead_piece.queue_free()
+		dead_piece = dead_piece.next_piece
+
+## Add (or remove, if negative) [param spool_length] of [RopePiece] elements to
 ## a logical "spool" located at [member _rope_start].  As the [Rope2D] is
 ## pulled via physics, new pieces will be spooled out until
-## [param spool_pieces] have been added to the rope.  Each [RopePiece] will be
+## [param spool_length] has been added to the rope.  Each [RopePiece] will be
 ## [member piece_length] in size.[br]
 ## [br]
-## If [param spool_pieces] is negative, then pieces are pulled back into the spool
+## If [param spool_length] is negative, then pieces are pulled back into the spool
 ## using the force value specified in
 ## [annotation RopePieceParameters.push_rope_force].[br]
 ## [br]
-## If [param spool_pieces] is positive, then pieces are extruded at a rate commesurate
+## If [param spool_length] is positive, then pieces are extruded at a rate commensurate
 ## with the force being exerted on the [Rope2D], as from a [WindArea2D] or gravity.
 ## Additionally, if [annotation RopePieceParmaeters.push_rope] is set to true, then
 ## [annotation RopePieceParameters.push_rope_force] will be added to whatever other
@@ -328,9 +375,10 @@ func extend(target: Vector2, max_segments: int = -1) -> RopePiece:
 ## [b]Note:[/b] Invoking [code]await spool()[/code] will wait until all pending [method spool]
 ## invocations have completed, including the current one.
 ## [b]Parameters:[/b][br][br]
-## - [param spool_pieces] - the number of new [RopePiece] to add to the
-##   [Rope2D].[br]
-func spool(spool_pieces: int = 1, lock = randf()):
+## - [param spool_length] - the length of rope to add.[br]
+func spool(spool_length: float = 1, lock = randf()):
+	var spool_pieces: int = _length_to_segments(spool_length)
+	print("From ", spool_length, " to ", spool_pieces)
 	_pending_spool_pieces += spool_pieces
 
 	if _spool_lock == 0:
@@ -481,7 +529,7 @@ func calculate_rope_length(from: RopePiece = _rope_start, to: RopePiece = _rope_
 		if not walker.next_piece:
 			break
 
-		dist += walker.get_start_position().distance_to(walker.next_piece.get_start_position())
+		dist += walker.get_prev_position().distance_to(walker.next_piece.get_prev_position())
 		walker = walker.next_piece
 
 	return dist

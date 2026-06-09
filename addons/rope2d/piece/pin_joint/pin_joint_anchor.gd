@@ -16,6 +16,10 @@ extends RopePiecePinJoint
 ## constrained as the [RopePieceGroovePin] implementation.
 class_name RopeAnchorPinJoint
 
+## Returns [code]TRUE[/code] if the [RopePiece] is an anchor element.
+func is_anchor() -> bool:
+	return true
+
 ## Prevent changing the shape of the anchor to the default CapsuleShape2D.
 func set_shape(shape: Shape2D, piece_length: float):
 	if shape is CapsuleShape2D:

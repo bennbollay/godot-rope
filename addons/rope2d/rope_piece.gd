@@ -85,7 +85,6 @@ func relocate_to(length: float, angle: float, target_anchor: RopePiece, force: f
 	_location_target = new_position
 
 	if push_rope or length < 0:
-		# XXX get_start_position might be wrong here
 		add_relocation_force((_location_target - get_prev_position()) * force)
 		
 	await on_relocation_done
@@ -110,3 +109,7 @@ func set_piece_rotation(rot: float):
 ## Hide the current piece if it's not part of the active rope.
 func set_piece_visible(vis: bool):
 	visible = vis
+
+## Returns [code]TRUE[/code] if the [RopePiece] is an anchor element.
+func is_anchor() -> bool:
+	return false
