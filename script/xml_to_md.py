@@ -177,8 +177,9 @@ def godot_class_doc_link(
 ) -> str:
     if item_type == "member":
         item_type = "property"  # godot docs named it differently between url and xml for some reason
-    if item_name == "get_global_mouse_position":
-        print(class_name, item_name, item_type)
+
+    if item_name is not None:
+        item_name = item_name.replace("_", "-")
 
     anchor = ""
     if item_name is not None:
