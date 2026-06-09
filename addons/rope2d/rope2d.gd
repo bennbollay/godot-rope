@@ -109,9 +109,6 @@ signal on_new_rope_anchor(anchor: RopePiece)
 ## [constant Rope2D.CREATE_TO_MOUNT].
 signal on_rope_create(rope: Rope2D)
 
-# XXX:
-#  Set up a save/load test.
-
 var _rope_start: RopePiece
 var _rope_end: RopePiece
 var _rope_last_piece: RopePiece
@@ -589,57 +586,74 @@ func _freeze_nodes(v: Variant):
 			_freeze_nodes(n)
 	
 
-
-## [b]Unsupported[/b][br][br]
-## Returns a serializable [Dictionary] that represents the [Rope2D] in the [annotation Node2D.global_position]
-## coordinate space.
-func to_json() -> Dictionary:
-	var rope = []
+## Returns a serializable [Dictionary] that represents the [Rope2D] as a sequence
+## of [annotation RigidBody2D.rotation] of [member piece_length] size. Optionally
+## preserve the [annotation RigidBody2D.linear_velocity] and
+## [annotation RigidBody2D.angular_velocity] if [param preserve_velocity] is
+## [code]TRUE[/code][br]
+## [br]
+## Must be restored to a [Rope2D] with matching [annotation RopePieceParameters.piece_length], but
+## other parameters and mount points are not persisted.[br]
+## [br]
+## [b]Parameters:[/b][br][br]
+## * [param preserve_velocity] - Record the [annotation RigidBody2D.linear_velocity] and
+## [annotation RigidBody2D.angular_velocity] of the [RopePiece]
+func to_json(preserve_velocity: bool = false) -> Dictionary:
+	var rope: Array[float] = []
+	var forces = []
 	var walker: RopePiece = _rope_start.next_piece
 	var last_piece: RopePiece = _rope_start
 	while walker:
-		rope.append(walker.rotation)
+		rope.append(walker.get_rotation())
+		if preserve_velocity:
+			forces.push_back(walker.get_velocities())
+			
 		last_piece = walker
 		walker = walker.next_piece
 
+	if rope.size() > 0:
+		assert(last_piece == _rope_end)
+	
 	return {
-		"close_tolerance": close_tolerance,
+		"piece_length": piece_length,
 		"rope": rope,
+		"forces": forces,
 		"end_global_position": str(last_piece.global_position),
+		"end_rotation": last_piece.rotation
 	}
 
 
-## [b]Unsupported[/b][br][br]
-## [br]
-## * [param start] - the [RopePiece] that was originally passed to [method create_rope].[br]
-## [br]
-## * [param saved_rope] - the [Dictionary] returned from [method to_json].
-static func create_saved_rope(start: RopePiece, saved_rope: Variant) -> Rope2D:
-	return Rope2D.new()
-
-## [b]Unsupported[/b][br][br]
 func from_json(saved_rope: Variant) -> RopePiece:
 	if not "rope" in saved_rope:
 		return
-
-	_rope_last_piece = _set_points(saved_rope.rope)
+		
+	assert(saved_rope.piece_length == piece_length, "Different piece lengths unsupported")
+	
+	# Delete the existing pieces
+	var walker: RopePiece = _rope_start.next_piece
+	_rope_start.clear_next()
+	while walker:
+		walker.queue_free()
+		walker = walker.next_piece
+	
+	_rope_last_piece = _set_points(saved_rope.rope, saved_rope.forces)
 
 	# Assumes free-floating endpoint.
-	var rope_end_piece: RopePiece
-	rope_end_piece = _rope_start.clone(self)
-	rope_end_piece.set_piece_position(Utility.string_to_vector2(saved_rope.end_global_position))
+	_rope_end = _create_ending_anchor(ending_anchor_mount_point, _rope_last_piece,
+			-1, saved_rope.end_rotation)
+	_rope_end.set_piece_position(
+			Utility.string_to_vector2(saved_rope.end_global_position))
 
-	# Connect the last_piece to the end of the chain.
-	_rope_last_piece.set_next_piece(rope_end_piece)
-
-	return rope_end_piece
+	return _rope_last_piece
 
 
-func _set_points(points: Array) -> RopePiece:
+func _set_points(rotations: Array, forces: Array) -> RopePiece:
 	var piece: RopePiece = _rope_start
 
 	# Ignore the last entry which is the rope_end_piece
-	for i in range(0, points.size() - 1):
-		piece = _create_piece(piece, i, points[i])
+	for i in range(0, rotations.size() - 1):
+		piece = _create_piece(piece, i, rotations[i])
+		if forces.size() > i:
+			piece.set_velocities(Utility.string_to_vector2(forces[i].linear_velocity), forces[i].angular_velocity)
 
 	return piece

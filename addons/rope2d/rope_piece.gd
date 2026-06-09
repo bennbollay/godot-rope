@@ -40,6 +40,10 @@ func _silence_editor_warnings():
 ## Update the joint's bias and softness parameters.
 @abstract func set_joint_parameters(bias: float, softness: float)
 
+## Set the [annotation RigidBody2D.linear_velocity] and
+## [annotation RigidBody2D.angular_velocity] on the [RopePiece].
+@abstract func set_velocities(linear: Vector2, angular: float)
+
 ## Used during spooling to control which part of the [RopePiece] the [GrooveJoint2D]
 ## attaches to.
 @abstract func get_relocation_path() -> String
@@ -55,6 +59,11 @@ func _silence_editor_warnings():
 @abstract func get_prev_position() -> Vector2
 ## The global_position the next RopePiece starts at.
 @abstract func get_next_position() -> Vector2
+## Returns the rotation, in radians, of the [RopePiece].
+@abstract func get_rotation() -> float
+## Return a [Dictionary] of the [annotation RigidBody2D.linear_velocity] and
+## [annotation RigidBody2D.angular_velocity].
+@abstract func get_velocities() -> Dictionary
 
 ## Diagnostic flag to add more logging messages.
 var debug: bool = true

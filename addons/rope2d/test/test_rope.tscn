@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://cep2bvkhu72ic" path="res://addons/rope2d/test/mouse.gd" id="8_a5l37"]
 [ext_resource type="Script" uid="uid://cko7mihvrhxxb" path="res://addons/rope2d/test/deleting.gd" id="8_jah7k"]
 [ext_resource type="Script" uid="uid://evu3g8hru5io" path="res://addons/rope2d/test/following.gd" id="9_enyik"]
+[ext_resource type="Script" uid="uid://d05km45gfhv62" path="res://addons/rope2d/test/save_and_load.gd" id="10_g77nt"]
 
 [sub_resource type="Resource" id="Resource_kelt8"]
 script = ExtResource("3_enyik")
@@ -64,6 +65,15 @@ offset_bottom = 68.0
 theme_override_font_sizes/font_size = 32
 text = "Press D to draw/undraw the lines"
 script = ExtResource("1_eg1pv")
+
+[node name="Save and Load" type="Label" parent="." unique_id=678631185]
+offset_left = 815.0
+offset_top = 65.0
+offset_right = 1252.0
+offset_bottom = 110.0
+theme_override_font_sizes/font_size = 32
+text = "Press S to save and L to load"
+script = ExtResource("10_g77nt")
 
 [node name="Fixed on Both Ends" type="Label" parent="." unique_id=606895121]
 offset_left = 150.0

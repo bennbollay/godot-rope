@@ -2,9 +2,9 @@ extends Node2D
 
 var rope: Rope2D
 func _ready() -> void:
-	rope = Rope2D.new($Start)
+	rope = Rope2D.new()
 	add_child(rope)
-	rope.create_rope($End)
+	rope.create_rope($End.global_position)
 
 var gate: float = 0.0
 func _process(delta: float) -> void:

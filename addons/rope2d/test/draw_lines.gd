@@ -9,26 +9,25 @@ func remove_drawers():
 	get_tree().debug_collisions_hint = true
 	get_tree().root.propagate_call("queue_redraw")
 
+func get_ropes() -> Array:
+	return get_parent().find_children("Rope2D")
+	
 func add_drawers():
-	var ropes: Array = get_parent().find_children("Rope2D")
-	for rope: Rope2D in ropes:
+	for rope: Rope2D in get_ropes():
 		var drawer := RopeDrawSimpleLine.new(rope)
 		rope.add_child(drawer)
 		drawers.push_back(drawer)
 
 	get_tree().debug_collisions_hint = false
 	get_tree().root.propagate_call("queue_redraw")
-	
 
 var gate := NoFasterThan.new()
 func _process(delta: float) -> void:
 	gate.try(delta, func():
-		if not Input.is_key_pressed(KEY_D):
-			return
-			
-		if drawers.size() > 0:
-			remove_drawers()
-			return
-					
-		add_drawers()
+		if Input.is_key_pressed(KEY_D):
+			if drawers.size() > 0:
+				remove_drawers()
+				return
+						
+			add_drawers()
 	)

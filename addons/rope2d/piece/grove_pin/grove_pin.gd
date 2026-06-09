@@ -109,3 +109,10 @@ func get_relocation_path() -> String:
 
 func add_relocation_force(force: Vector2):
 	pin_body.add_constant_force(force)
+
+func set_velocities(_linear: Vector2, _angular: float):
+	pass
+func get_rotation() -> float:
+	return 0.0
+func get_velocities() -> Dictionary:
+	return {}

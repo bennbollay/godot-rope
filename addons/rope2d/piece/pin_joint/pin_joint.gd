@@ -88,6 +88,21 @@ func get_prev_position() -> Vector2:
 func get_next_position() -> Vector2:
 	return joint.global_position
 
+func get_rotation() -> float:
+	return as_rigidbody().rotation
+
+func set_velocities(linear: Vector2, angular: float):
+	var r: RigidBody2D = as_rigidbody()
+	r.linear_velocity = linear
+	r.angular_velocity = angular
+	
+func get_velocities() -> Dictionary:
+	var r: RigidBody2D = as_rigidbody()
+
+	return {
+		"linear_velocity": str(r.linear_velocity),
+		"angular_velocity": r.angular_velocity,
+	}
 
 func update_relocation() -> bool:
 	if _location_target == Vector2.INF:
