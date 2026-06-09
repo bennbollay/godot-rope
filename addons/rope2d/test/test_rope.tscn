@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://cujfol0q25pgs" path="res://addons/rope2d/test/extending.gd" id="7_3jgq3"]
 [ext_resource type="Script" uid="uid://cep2bvkhu72ic" path="res://addons/rope2d/test/mouse.gd" id="8_a5l37"]
 [ext_resource type="Script" uid="uid://cko7mihvrhxxb" path="res://addons/rope2d/test/deleting.gd" id="8_jah7k"]
+[ext_resource type="Script" uid="uid://evu3g8hru5io" path="res://addons/rope2d/test/following.gd" id="9_enyik"]
 
 [sub_resource type="Resource" id="Resource_kelt8"]
 script = ExtResource("3_enyik")
@@ -37,6 +38,18 @@ size = Vector2(75, 1200)
 script = ExtResource("3_enyik")
 freeze = true
 metadata/_custom_type_script = "uid://bfxcw3p1krtyi"
+
+[sub_resource type="Resource" id="Resource_jah7k"]
+script = ExtResource("3_enyik")
+freeze = true
+metadata/_custom_type_script = "uid://bfxcw3p1krtyi"
+
+[sub_resource type="Resource" id="Resource_enyik"]
+script = ExtResource("3_enyik")
+freeze = true
+metadata/_custom_type_script = "uid://bfxcw3p1krtyi"
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_g77nt"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_fas15"]
 radius = 20.0
@@ -160,7 +173,7 @@ script = ExtResource("8_jah7k")
 [node name="Rope2D" type="Node2D" parent="Deleting" unique_id=252215302 node_paths=PackedStringArray("end_position_node", "rope_piece_mount_point", "starting_anchor_mount_point", "ending_anchor_mount_point")]
 position = Vector2(100, 50)
 script = ExtResource("2_jah7k")
-rope_starting_anchor_parameters = SubResource("Resource_l0y6s")
+rope_starting_anchor_parameters = SubResource("Resource_jah7k")
 ready_action = 1
 end_position_node = NodePath("../Target")
 rope_piece_mount_point = NodePath("../Pieces")
@@ -175,6 +188,30 @@ position = Vector2(100, 100)
 
 [node name="Target" type="Node2D" parent="Deleting" unique_id=1873972322]
 position = Vector2(1000, 100)
+
+[node name="Following" type="Label" parent="." unique_id=1390656400]
+offset_left = 150.0
+offset_top = 1000.0
+offset_right = 224.0
+offset_bottom = 1023.0
+text = "Following (press b to launch)"
+script = ExtResource("9_enyik")
+
+[node name="Rope2D" type="Node2D" parent="Following" unique_id=1369618469]
+position = Vector2(100, 100)
+script = ExtResource("2_jah7k")
+rope_starting_anchor_parameters = SubResource("Resource_enyik")
+close_tolerance = 20.0
+metadata/_custom_type_script = "uid://e4erd0bi0dy6"
+
+[node name="Ball" type="RigidBody2D" parent="Following" unique_id=1822893268]
+position = Vector2(100, 100)
+collision_layer = 0
+collision_mask = 0
+gravity_scale = 0.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Following/Ball" unique_id=2061043601]
+shape = SubResource("CircleShape2D_g77nt")
 
 [node name="Mouse" type="StaticBody2D" parent="." unique_id=2114753636]
 unique_name_in_owner = true

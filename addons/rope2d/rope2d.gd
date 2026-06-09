@@ -110,13 +110,6 @@ signal on_new_rope_anchor(anchor: RopePiece)
 signal on_rope_create(rope: Rope2D)
 
 # XXX:
-#  Set up a "launcher" test.
-#    * Fire a projectile and then extend the line out after it?
-#    -- This is actually a pretty good idea, doing the same "extend" that
-#       is used to follow the mouse.  Just make sure that the points returned
-#       also include the "chased" point.
-#  Add a demo for following a Line2D.
-#    -- Maybe even trimming the Line2D's visibility as it goes along, if feasible.
 #  Set up a save/load test.
 
 var _rope_start: RopePiece
@@ -269,6 +262,10 @@ func create_rope(target: Vector2, max_length: float = -1, start_piece: RopePiece
 	var max_segments = _max_length_to_max_segments(max_length)
 	var start_pos: Vector2 = start_piece.get_next_position()
 	var distance := start_pos.distance_to(target)
+	
+	if distance < close_tolerance:
+		return _rope_end
+		
 	var num_segments: int = _length_to_segments(distance)
 	var spawn_angle: float = _get_spawn_angle(start_piece, target)
 
@@ -276,7 +273,6 @@ func create_rope(target: Vector2, max_length: float = -1, start_piece: RopePiece
 		num_segments = max_segments
 
 	_rope_last_piece = _create_rope_segments(start_piece, num_segments, spawn_angle, target)
-
 	_rope_end = _create_ending_anchor(ending_anchor_mount_point, _rope_last_piece, -1, spawn_angle)
 
 	# Connect the last_piece to the end of the chain.
@@ -305,9 +301,12 @@ func create_rope(target: Vector2, max_length: float = -1, start_piece: RopePiece
 ##   a [Rope2D] of fixed length.[br]
 func extend(target: Vector2, max_length: int = -1) -> RopePiece:
 	assert(max_length >= -1)
-	_rope_end.queue_free()
-	_rope_last_piece.clear_next()
-	return create_rope(target, max_length, _rope_last_piece)
+	if _rope_end:
+		_rope_end.queue_free()
+	if _rope_last_piece:
+		_rope_last_piece.clear_next()
+		return create_rope(target, max_length, _rope_last_piece)
+	return create_rope(target, max_length)
 
 ## Reduce the length of the rope by [param length] by trimming pieces from the
 ## end of the rope. Adds a new anchor at the end.[br]
@@ -381,7 +380,6 @@ func contract(length: float):
 ## - [param spool_length] - the length of rope to add.[br]
 func spool(spool_length: float = 1, lock = randf()):
 	var spool_pieces: int = _length_to_segments(spool_length)
-	print("From ", spool_length, " to ", spool_pieces)
 	_pending_spool_pieces += spool_pieces
 
 	if _spool_lock == 0:
@@ -566,6 +564,10 @@ func get_points(local: Vector2 = Vector2.ZERO) -> Array[Vector2]:
 		points.append(walker.global_position - local)
 		walker = walker.next_piece
 	return points
+
+## Returns the trailing anchor of the rope.
+func get_end_anchor() -> RopePiece:
+	return _rope_end
 
 ## Freeze all of the physics in the Rope, extremely useful when debugging. An
 ## [code]unfreeze_rope()[/code] is left as an exercise for the reader.
