@@ -3,7 +3,7 @@
 extends Node2D
 
 ## The abstract base class that various different types of [RopePiece], such as
-## [PinJointRopePiece], are derived from.
+## [RopePiecePinJoint], are derived from.
 class_name RopePiece
 
 ## Force added from a [WindArea2D] on this [RopePiece].
@@ -14,7 +14,7 @@ var push_rope: bool = false
 var push_rope_force: float = 50.0
 var _location_target: Vector2 = Vector2.INF
 
-## Push this piece towards the current [annotation CanvasItem.get_global_mouse_position].
+## Push this piece towards the current [method CanvasItem.get_global_mouse_position].
 var follow_mouse: bool = false
 
 ## The next [RopePiece] in the [Rope2D].
@@ -43,8 +43,8 @@ func _silence_editor_warnings():
 @abstract func set_joint_parameters(bias: float, softness: float)
 
 
-## Set the [annotation RigidBody2D.linear_velocity] and
-## [annotation RigidBody2D.angular_velocity] on the [RopePiece].
+## Set the [member RigidBody2D.linear_velocity] and
+## [member RigidBody2D.angular_velocity] on the [RopePiece].
 @abstract func set_velocities(linear: Vector2, angular: float)
 
 
@@ -74,8 +74,8 @@ func _silence_editor_warnings():
 @abstract func get_rotation() -> float
 
 
-## Return a [Dictionary] of the [annotation RigidBody2D.linear_velocity] and
-## [annotation RigidBody2D.angular_velocity].
+## Return a [Dictionary] of the [member RigidBody2D.linear_velocity] and
+## [member RigidBody2D.angular_velocity].
 @abstract func get_velocities() -> Dictionary
 
 ## Diagnostic flag to add more logging messages.

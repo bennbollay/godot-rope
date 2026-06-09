@@ -86,8 +86,8 @@ def bbcode_to_markdown(text) -> str:
     re_classable = r"(\w*)\.?(\w*)"
     # References to methods in the same file into links
     text = re.sub(
-        r"\[method (\w+?)]",
-        lambda match: class_doc_link(item_name=match.group(1)),
+        r"\[(method) " + re_classable + r"]",
+        group_to_doclink,
         text,
     )
 
@@ -148,7 +148,7 @@ def is_godot_engine(class_name: str = "") -> bool:
 def class_doc_link(
     class_name: str = "", item_name: str = "", item_type: str = "method"
 ) -> str:
-    if is_godot_engine(class_name) and item_type != "member":
+    if is_godot_engine(class_name):
         return godot_class_doc_link(class_name, item_name, item_type)
     return file_local_doc_link(class_name, item_name, item_type)
 
@@ -177,6 +177,8 @@ def godot_class_doc_link(
 ) -> str:
     if item_type == "member":
         item_type = "property"  # godot docs named it differently between url and xml for some reason
+    if item_name == "get_global_mouse_position":
+        print(class_name, item_name, item_type)
 
     anchor = ""
     if item_name is not None:

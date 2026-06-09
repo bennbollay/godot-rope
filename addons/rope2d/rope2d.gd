@@ -602,8 +602,8 @@ func _freeze_nodes(v: Variant):
 
 ## Returns a serializable [Dictionary] that represents the [Rope2D] as a sequence
 ## of [annotation RigidBody2D.rotation] of [member piece_length] size. Optionally
-## preserve the [annotation RigidBody2D.linear_velocity] and
-## [annotation RigidBody2D.angular_velocity] if [param preserve_velocity] is
+## preserve the [member RigidBody2D.linear_velocity] and
+## [member RigidBody2D.angular_velocity] if [param preserve_velocity] is
 ## [code]TRUE[/code][br]
 ## [br]
 ## Must be restored to a [Rope2D] with matching [annotation RopePieceParameters.piece_length], but
