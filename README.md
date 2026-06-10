@@ -4,17 +4,11 @@ This project creates a Rope class a variety of different ways to support physics
 
 # Video Example
 
-
-
-https://github.com/user-attachments/assets/30e491fb-57b7-4230-9f8f-edf31166ab1e
-
-
-
-
+<https://github.com/user-attachments/assets/30e491fb-57b7-4230-9f8f-edf31166ab1e>
 
 # Usage
 
-Open the [addons/rope2d/test/test_rope.tscn](addons/rope2d/test/) scene or look at the various example files in that
+Open the [addons/rope2d/test/test_rope.tscn](https://github.com/bennbollay/godot-rope/tree/main/addons/rope2d/test) scene or look at the various example files in that
 directory for common examples.
 
 Many of the examples are also documented below.
@@ -23,7 +17,7 @@ Many of the examples are also documented below.
 
 Inline documentation in Godot is available.
 
-Additionally, you can read the documentation [here](./docs/api/rope2_d.md).
+Additionally, you can read the documentation [here](https://github.com/bennbollay/godot-rope/tree/main/docs/api/rope2_d.md).
 
 # Examples
 
@@ -31,7 +25,7 @@ All of these examples are present in the `addons/rope2d/test/test_rope.tscn` sce
 
 ## Common Parameters
 
-`Rope2D` supports three different [RopePieceParameters](./docs/api/rope_piece_parameters.md) that can be used to
+`Rope2D` supports three different [RopePieceParameters](https://github.com/bennbollay/godot-rope/tree/main/docs/api/rope_piece_parameters.md) that can be used to
 customize various `RigidBody2D` and `Joint2D` attributes on the rope elements, as they are created.
 
 This is an easy way to set options like `RigidBody2D.freeze` or to change the `RigidBody2D.gravity_scale` for anchors to
