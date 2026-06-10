@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://cxyeku3an2g13"]
+
+[ext_resource type="Script" uid="uid://1rxp7h2tfmnk" path="res://addons/rope2d/piece/grove_pin/grove_pin.gd" id="1_ul0r6"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ul0r6"]
+radius = 1.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_bv15a"]
+radius = 1.0
+
+[node name="GrovePinRopePiece" type="Node2D" unique_id=1546304813]
+script = ExtResource("1_ul0r6")
+
+[node name="Pin" type="RigidBody2D" parent="." unique_id=64746790]
+metadata/_custom_type_script = "uid://dryl0ed7hg0e4"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pin" unique_id=1562547884]
+shape = SubResource("CircleShape2D_ul0r6")
+
+[node name="PinJoint2D" type="PinJoint2D" parent="Pin" unique_id=2079668455]
+node_a = NodePath("..")
+node_b = NodePath("../../Groove")
+
+[node name="Groove" type="RigidBody2D" parent="." unique_id=840569037]
+collision_layer = 0
+collision_mask = 0
+gravity_scale = 0.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Groove" unique_id=936578772]
+position = Vector2(0, 2)
+shape = SubResource("CircleShape2D_bv15a")
+
+[node name="GrooveJoint2D" type="GrooveJoint2D" parent="Groove" unique_id=1580882717]
+node_a = NodePath("..")
+length = 4.0
+initial_offset = 4.0

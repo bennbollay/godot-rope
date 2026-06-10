@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://bhof88x0fym2i"]
+
+[ext_resource type="Script" uid="uid://jljtv8e2vyiy" path="res://addons/rope2d/piece/pin_joint/pin_joint_anchor.gd" id="1_kk0uk"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_vfguq"]
+
+[node name="RopePinJointAnchor" type="RigidBody2D" unique_id=325141143]
+script = ExtResource("1_kk0uk")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=640490644]
+shape = SubResource("CircleShape2D_vfguq")
+
+[node name="PinJoint2D" type="PinJoint2D" parent="." unique_id=996678366]

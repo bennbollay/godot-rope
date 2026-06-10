@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://dmvf0nq7q74ns"]
+
+[ext_resource type="Script" uid="uid://c3y3b7bnvxk21" path="res://addons/rope2d/piece/grove_pin/groove_pin_anchor.gd" id="1_bgqmf"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_bgqmf"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ltusy"]
+radius = 1.0
+height = 4.0
+
+[node name="RopeGroovePinAnchor" type="Node2D" unique_id=1890322783]
+script = ExtResource("1_bgqmf")
+
+[node name="Pin" type="RigidBody2D" parent="." unique_id=1543962276]
+collision_layer = 0
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Pin" unique_id=372698116]
+shape = SubResource("CircleShape2D_bgqmf")
+
+[node name="PinJoint2D" type="PinJoint2D" parent="Pin" unique_id=1901699321]
+node_a = NodePath("..")
+node_b = NodePath("../../Groove")
+
+[node name="Groove" type="RigidBody2D" parent="." unique_id=1230771712]
+collision_layer = 0
+collision_mask = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Groove" unique_id=1115940093]
+shape = SubResource("CapsuleShape2D_ltusy")
+
+[node name="GrooveJoint2D" type="GrooveJoint2D" parent="Groove" unique_id=1854114500]
+node_a = NodePath("..")
+length = 4.0
+initial_offset = 4.0

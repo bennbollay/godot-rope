@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://bf5jufm3igcse"]
+
+[ext_resource type="Script" uid="uid://0dn7o21o6apf" path="res://rope2d/wind_area2d.gd" id="1_u4qpv"]
+
+[node name="WindGenerator" type="Area2D" unique_id=303996806]
+script = ExtResource("1_u4qpv")

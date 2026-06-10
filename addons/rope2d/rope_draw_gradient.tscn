@@ -1,0 +1,59 @@
+[gd_scene format=3 uid="uid://bjd3h1fgjaygh"]
+
+[sub_resource type="Gradient" id="Gradient_ru52x"]
+offsets = PackedFloat32Array(0, 0.2, 0.5, 0.8, 1)
+colors = PackedColorArray(1, 0, 0, 0, 1, 0, 0, 0.60784316, 1, 0, 0, 1, 1, 0, 0, 0.60784316, 1, 0, 0, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_vddhv"]
+gradient = SubResource("Gradient_ru52x")
+width = 1
+fill_from = Vector2(1, 0.86752135)
+fill_to = Vector2(1, 0.12820514)
+
+[sub_resource type="GDScript" id="GDScript_50aip"]
+script/source = "extends Line2D
+
+class_name RopeDrawGradient
+
+var rope: Rope2D
+
+
+func _ready() -> void:
+	begin_cap_mode = Line2D.LINE_CAP_NONE
+	joint_mode = Line2D.LINE_JOINT_ROUND
+	width = 30
+
+
+func _process(_delta: float) -> void:
+	if not rope:
+		return
+
+	points = rope.get_points()
+
+
+func set_rope(draw_rope: Rope2D):
+	rope = draw_rope
+
+
+func set_color(color: Color):
+	var grad_texture: GradientTexture2D = texture
+	var colors: PackedColorArray = grad_texture.gradient.colors
+
+	print(colors)
+	print(grad_texture.gradient.offsets)
+	
+	for i in range(0, colors.size()):
+		colors[i].r = color.r
+		colors[i].g = color.g
+		colors[i].b = color.b
+
+	grad_texture.gradient.colors = colors
+"
+
+[node name="RopeDrawGradient" type="Line2D" unique_id=211892333]
+rotation = 0.0016605188
+points = PackedVector2Array(5, 10, 1687.8226, 1096.1989)
+width = 50.0
+texture = SubResource("GradientTexture2D_vddhv")
+texture_mode = 1
+script = SubResource("GDScript_50aip")

@@ -22,6 +22,14 @@ config/features=PackedStringArray("4.6", "GL Compatibility")
 window/size/viewport_width=1920
 window/size/viewport_height=1280
 
+[editor]
+
+movie_writer/movie_file="./demo-movie.avi"
+
+[physics]
+
+2d/solver/solver_iterations=512
+
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
