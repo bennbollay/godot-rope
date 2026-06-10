@@ -58,28 +58,28 @@ radius = 20.0
 [node name="TestRope" type="Node2D" unique_id=2086491870]
 
 [node name="Draw Lines" type="Label" parent="." unique_id=1181909267]
-offset_left = 815.0
-offset_top = 23.0
-offset_right = 1183.0
-offset_bottom = 68.0
+offset_left = 17.0
+offset_top = 14.0
+offset_right = 532.0
+offset_bottom = 59.0
 theme_override_font_sizes/font_size = 32
 text = "Press D to draw/undraw the lines"
 script = ExtResource("1_eg1pv")
 
 [node name="Save and Load" type="Label" parent="." unique_id=678631185]
-offset_left = 815.0
-offset_top = 65.0
-offset_right = 1252.0
-offset_bottom = 110.0
+offset_left = 17.0
+offset_top = 56.0
+offset_right = 454.0
+offset_bottom = 101.0
 theme_override_font_sizes/font_size = 32
-text = "Press S to save and L to load"
+text = "Press S to save and L to load ([P]hysics unsaved)"
 script = ExtResource("10_g77nt")
 
 [node name="Fixed on Both Ends" type="Label" parent="." unique_id=606895121]
 offset_left = 150.0
-offset_top = 50.0
+offset_top = 150.0
 offset_right = 295.0
-offset_bottom = 73.0
+offset_bottom = 173.0
 text = "fixed on both ends"
 
 [node name="Rope2D" type="Node2D" parent="Fixed on Both Ends" unique_id=717348956 node_paths=PackedStringArray("ending_anchor_mount_point")]
@@ -96,9 +96,9 @@ position = Vector2(1000, 100)
 
 [node name="Fixed and Floating" type="Label" parent="." unique_id=1520115512]
 offset_left = 150.0
-offset_top = 200.0
+offset_top = 300.0
 offset_right = 470.0
-offset_bottom = 223.0
+offset_bottom = 323.0
 text = "fixed on the front and floating on the end"
 
 [node name="Rope2D" type="Node2D" parent="Fixed and Floating" unique_id=1722305585 node_paths=PackedStringArray("end_position_node")]
@@ -114,9 +114,9 @@ position = Vector2(1000, 100)
 
 [node name="Specific length" type="Label" parent="." unique_id=829112712]
 offset_left = 150.0
-offset_top = 350.0
+offset_top = 450.0
 offset_right = 470.0
-offset_bottom = 373.0
+offset_bottom = 473.0
 text = "creating a specific length"
 script = ExtResource("4_g77nt")
 
@@ -131,9 +131,9 @@ position = Vector2(1000, 100)
 
 [node name="Spooling" type="Label" parent="." unique_id=579265488]
 offset_left = 150.0
-offset_top = 500.0
-offset_right = 470.0
-offset_bottom = 549.0
+offset_top = 600.0
+offset_right = 542.0
+offset_bottom = 649.0
 text = "spooling (press down to lengthen or up to shorten)"
 script = ExtResource("5_a0dvm")
 
@@ -157,9 +157,9 @@ shape = SubResource("RectangleShape2D_rwur8")
 
 [node name="Extending" type="Label" parent="." unique_id=2140674042]
 offset_left = 150.0
-offset_top = 650.0
-offset_right = 470.0
-offset_bottom = 673.0
+offset_top = 750.0
+offset_right = 574.0
+offset_bottom = 773.0
 text = "extend  (press enter to lengthen, and space to shorten)"
 script = ExtResource("7_3jgq3")
 
@@ -174,9 +174,9 @@ position = Vector2(1000, 100)
 
 [node name="Deleting" type="Label" parent="." unique_id=1979408879]
 offset_left = 150.0
-offset_top = 800.0
+offset_top = 900.0
 offset_right = 574.0
-offset_bottom = 823.0
+offset_bottom = 923.0
 text = "deleting (press x to delete)"
 script = ExtResource("8_jah7k")
 
@@ -201,9 +201,9 @@ position = Vector2(1000, 100)
 
 [node name="Following" type="Label" parent="." unique_id=1390656400]
 offset_left = 150.0
-offset_top = 1000.0
-offset_right = 224.0
-offset_bottom = 1023.0
+offset_top = 1100.0
+offset_right = 371.0
+offset_bottom = 1123.0
 text = "Following (press b to launch)"
 script = ExtResource("9_enyik")
 
