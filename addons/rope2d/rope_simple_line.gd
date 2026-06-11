@@ -2,10 +2,13 @@ extends Line2D
 
 class_name RopeDrawSimpleLine
 
-var rope: Rope2D
+@export var rope: Rope2D
 
 
-func _init(draw_rope: Rope2D):
+func _init(draw_rope: Rope2D = null):
+	if not draw_rope:
+		return
+		
 	rope = draw_rope
 	begin_cap_mode = Line2D.LINE_CAP_ROUND
 	joint_mode = Line2D.LINE_JOINT_ROUND

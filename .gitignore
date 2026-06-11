@@ -1,3 +1,5 @@
 .godot
 doc_classes
 .DS_Store
+*.avi
+v*.zip

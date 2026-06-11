@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://bs5m4eej8mmhe"]
+
+[ext_resource type="Script" uid="uid://e4erd0bi0dy6" path="res://addons/rope2d/rope2d.gd" id="1_5qbvu"]
+[ext_resource type="Script" uid="uid://cep2bvkhu72ic" path="res://addons/rope2d/test/mouse.gd" id="2_7wyvl"]
+[ext_resource type="Script" uid="uid://bfxcw3p1krtyi" path="res://addons/rope2d/rope_piece_parameters.gd" id="2_n77cp"]
+[ext_resource type="Script" uid="uid://cubkfqqdiiit2" path="res://addons/rope2d/rope_simple_line.gd" id="4_qcq16"]
+
+[sub_resource type="Resource" id="Resource_qcq16"]
+script = ExtResource("2_n77cp")
+freeze = true
+metadata/_custom_type_script = "uid://bfxcw3p1krtyi"
+
+[sub_resource type="Resource" id="Resource_8oqek"]
+script = ExtResource("2_n77cp")
+freeze = true
+metadata/_custom_type_script = "uid://bfxcw3p1krtyi"
+
+[sub_resource type="Resource" id="Resource_laalp"]
+script = ExtResource("2_n77cp")
+gravity_scale = 0.2
+metadata/_custom_type_script = "uid://bfxcw3p1krtyi"
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_n77cp"]
+radius = 20.0
+
+[node name="TestDemoVideo" type="Node2D" unique_id=616946738]
+
+[node name="Heading" type="Label" parent="." unique_id=1800871706]
+offset_top = 50.0
+offset_right = 1920.0
+offset_bottom = 399.0
+theme_override_font_sizes/font_size = 256
+text = "Rope2D"
+horizontal_alignment = 1
+
+[node name="Rope2D" type="Node2D" parent="." unique_id=432508116 node_paths=PackedStringArray("ending_anchor_mount_point")]
+position = Vector2(100, 650)
+script = ExtResource("1_5qbvu")
+rope_starting_anchor_parameters = SubResource("Resource_qcq16")
+rope_ending_anchor_parameters = SubResource("Resource_8oqek")
+rope_piece_parameters = SubResource("Resource_laalp")
+ready_action = 2
+ending_anchor_mount_point = NodePath("../Node2D")
+metadata/_custom_type_script = "uid://e4erd0bi0dy6"
+
+[node name="Node2D" type="Node2D" parent="." unique_id=857501396]
+position = Vector2(1820, 640)
+
+[node name="Mouse" type="StaticBody2D" parent="." unique_id=841674054]
+unique_name_in_owner = true
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("2_7wyvl")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Mouse" unique_id=209054088]
+shape = SubResource("CircleShape2D_n77cp")
+
+[node name="RopeDrawSimpleLine" type="Line2D" parent="." unique_id=1347453620 node_paths=PackedStringArray("rope")]
+width = 30.0
+default_color = Color(0.9911925, 0.22162896, 0.9999997, 1)
+begin_cap_mode = 2
+end_cap_mode = 2
+script = ExtResource("4_qcq16")
+rope = NodePath("../Rope2D")
+metadata/_custom_type_script = "uid://cubkfqqdiiit2"
